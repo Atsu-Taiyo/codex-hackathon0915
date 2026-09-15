@@ -1,0 +1,54 @@
+{
+  "file": "CloudRobot_Terminal.fbx",
+  "bytes": 16321788,
+  "fbx_version": 7400,
+  "geometries": [
+    {
+      "vertices": 250672,
+      "polygons": 501340,
+      "polygon_indices": 1504020,
+      "bounds_min": [
+        -0.4390106797218323,
+        -0.2554931938648224,
+        0.0
+      ],
+      "bounds_max": [
+        0.4390106797218323,
+        0.2554931938648224,
+        0.999969482421875
+      ],
+      "has_uv": true,
+      "has_normals": true
+    }
+  ],
+  "materials": 1,
+  "deformers": 0,
+  "texture_references": [
+    [
+      "tripo_convert_ed1accbd-4268-4f25-8db6-660239cea543.fbm/CloudRobot_Terminal_basecolor.JPEG"
+    ],
+    [
+      "tripo_convert_ed1accbd-4268-4f25-8db6-660239cea543.fbm/CloudRobot_Terminal_normal.JPEG"
+    ],
+    [
+      "tripo_convert_ed1accbd-4268-4f25-8db6-660239cea543.fbm/CloudRobot_Terminal_roughness.JPEG"
+    ],
+    [
+      "tripo_convert_ed1accbd-4268-4f25-8db6-660239cea543.fbm/CloudRobot_Terminal_metallic.JPEG"
+    ],
+    [
+      "tripo_convert_ed1accbd-4268-4f25-8db6-660239cea543.fbm/CloudRobot_Terminal_basecolor.JPEG"
+    ],
+    [
+      "tripo_convert_ed1accbd-4268-4f25-8db6-660239cea543.fbm/CloudRobot_Terminal_normal.JPEG"
+    ],
+    [
+      "tripo_convert_ed1accbd-4268-4f25-8db6-660239cea543.fbm/CloudRobot_Terminal_roughness.JPEG"
+    ],
+    [
+      "tripo_convert_ed1accbd-4268-4f25-8db6-660239cea543.fbm/CloudRobot_Terminal_metallic.JPEG"
+    ]
+  ],
+  "result": "PASS: binary structure, finite vertices, valid indices, UVs and normals",
+  "unity_editor_validation": "Not run: Unity Editor was unavailable. Helper was reviewed but not compiled."
+}
