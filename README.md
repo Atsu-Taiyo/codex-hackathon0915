@@ -6,7 +6,13 @@ Unity **6000.4.9f1** の共同開発用プロジェクト。Unity 標準の Asse
 
 1. Unity Hub で 6000.4.9f1 と Git LFS をインストール。
 2. `git lfs install` の後に clone し、Unity Hub の Add project from disk でリポジトリ直下を選択。
-3. `Assets/_Project/Scenes/Bootstrap.unity` を開いて Play。Console に `[Hackathon] Application initialized.` を出力します。
+3. `Assets/_Project/Scenes/Bootstrap.unity` を開いて Play。Room 1 の言語探索パズルが起動します。
+
+## Room 1 MVP
+
+ロボットと箱をクリックして名詞を発見し、6種類の動詞と組み合わせて実験します。カードのドラッグ並べ替え、ウィジェット内の RUN、生成画像による3コマ再生、目標判定、図鑑・実行履歴・ローカル保存に対応しています。
+
+操作と検証手順は [Room 1 ガイド](docs/ROOM_ONE.md)、画像生成プロンプトは [制作記録](ArtSource/RoomOne/PROMPTS.md) を参照してください。
 
 ## 配置
 
@@ -35,7 +41,7 @@ C# の慣習に合わせディレクトリ名は PascalCase。機能実装は Fe
 
 ## テストの追加
 
-機能テストは `Assets/_Project/Tests/EditMode/Features/<FeatureName>/` または `Tests/PlayMode/Features/<FeatureName>/` に置き、実装名と対応する `*Tests.cs` を使用します。Core/Common も同じ対応で整理します。初めてテストを追加する際に Unity Test Framework と Runtime/Test の assembly definition を導入し、Editor 専用テストは Editor に限定します。現時点ではゲーム機能・テストスイートはありません。
+機能テストは `Assets/_Project/Tests/EditMode/Features/<FeatureName>/` または `Tests/PlayMode/Features/<FeatureName>/` に置き、実装名と対応する `*Tests.cs` を使用します。Core/Common も同じ対応で整理します。Unity Test Framework を使う際は Runtime/Test の assembly definition を導入し、Editor 専用テストは Editor に限定します。Room 1 には追加パッケージ不要の Editor 検証コマンドと Play モード検証があり、手順は Room 1 ガイドに記載しています。
 
 ## 共同作業
 

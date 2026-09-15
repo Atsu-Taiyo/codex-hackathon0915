@@ -7,6 +7,7 @@ namespace Hackathon.Core
     {
         private void Awake()
         {
+            gameObject.AddComponent<Hackathon.RoomOne.RoomOneController>();
             Debug.Log("[Hackathon] Application initialized.");
         }
     }
