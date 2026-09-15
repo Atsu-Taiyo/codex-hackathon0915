@@ -1,7 +1,7 @@
 # CI / CD
 
 - GitHub の main push / PR で `CI` が Unity プロジェクト設定を検査します。これはコンパイルテストではありません。
-- Draft 以外の PR 作成・再開・更新時に `@codex review` を同じコミットにつき一度コメントします。Codex 側の対象リポジトリの Code review 有効化が必要です。
+- Codex のリポジトリ設定で「すべての PR をレビューする」「すべてのプッシュ時」を有効化しています。PR の作成と更新で自動レビューされます。手動の再依頼は `@codex review` です。重複依頼を避けるため Actions からのメンション投稿は行いません。
 - この Codex タスクの定期実行が main の成功した CI を確認し、専用の clean checkout で Unity 6000.4.9f1 の WebGL ビルドを実行して Sites に公開します。
 - Mac と Codex が実行できる状態である必要があります。GitHub Actions 用の Unity ライセンスや Sites の長期トークンは保存しません。
 - 元の作業ディレクトリの未コミット変更は公開対象にしません。main に push されたソースだけを公開します。PR のマージは自動化しません。
