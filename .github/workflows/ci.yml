@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  project-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Unity project configuration
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, re
+          root = pathlib.Path('.')
+          for name in ('manifest.json', 'packages-lock.json'):
+              json.loads((root / 'Packages' / name).read_text())
+          version = (root / 'ProjectSettings/ProjectVersion.txt').read_text()
+          assert 'm_EditorVersion: 6000.4.9f1' in version
+          scenes = (root / 'ProjectSettings/EditorBuildSettings.asset').read_text()
+          for scene in re.findall(r'path: (.+)', scenes):
+              assert (root / scene).is_file(), scene
+          assert (root / 'Assets/_Project/Editor/WebBuild.cs').is_file()
+          print('Unity project configuration verified. Compilation and WebGL build run in Codex on macOS.')
+          PY
