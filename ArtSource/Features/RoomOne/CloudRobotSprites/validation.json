@@ -1,0 +1,12 @@
+{
+  "scene_count": 7,
+  "pose_png_count": 21,
+  "standalone_character_png_count": 2,
+  "verified": [
+    "Every output crop matches source RGBA bytes at recorded offset.",
+    "All output PNGs decode as RGBA and have visible pixels.",
+    "All scene frames share the recorded canvas size.",
+    "Source hashes recorded; native pixels are not rescaled."
+  ],
+  "unity_editor_import_tested": false
+}
