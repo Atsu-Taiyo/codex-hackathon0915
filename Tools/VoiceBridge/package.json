@@ -1,0 +1,1 @@
+{"name":"room-one-voice","private":true,"type":"module","scripts":{"start":"node server.mjs","test":"node --test *.test.mjs"},"dependencies":{"codex-component":"github:Atsu-Taiyo/codex-component#430c25ff4d77e7400ff379603b452f8417df45bb"}}

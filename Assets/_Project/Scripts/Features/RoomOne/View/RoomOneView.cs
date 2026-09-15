@@ -111,6 +111,7 @@ namespace Hackathon.RoomOne
         }
         void DrawHeader()
         {
+            DrawVoiceButton();
             if (Button(new Rect(34, 32, 84, 76), "⌂", White, 42, !playing)) OpenModal("map");
             Label(new Rect(144, 31, 180, 27), "ENGLISH WORLD", 16, Muted, TextAnchor.MiddleLeft, true);
             Label(new Rect(144, 57, 190, 48), "Room 01", 32, Ink, TextAnchor.MiddleLeft, true);
@@ -182,6 +183,7 @@ namespace Hackathon.RoomOne
         void DrawBuilder()
         {
             Panel(new Rect(32, 588, 1536, 253), new Color(1, 1, 1, .97f), 27);
+            DrawVoiceControls();
             Label(new Rect(61, 603, 220, 24), "BUILD YOUR SENTENCE", 14, Muted, TextAnchor.MiddleLeft, true);
             Label(new Rect(1114, 603, 408, 24), "Drag to reorder  ·  Click a slot to replace", 14, Muted, TextAnchor.MiddleRight);
             Label(new Rect(68, 650, 201, 34), "Your words", 22, Ink, TextAnchor.MiddleLeft, true);

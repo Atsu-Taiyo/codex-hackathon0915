@@ -18,6 +18,7 @@ namespace Hackathon.RoomOne
         int row, frame, selected = -1, badSlot = -1, dragging = -1;
         Vector2 dragStart, scroll;
         bool hasDragged;
+        string draggedWord;
         string modal = "", notice = "", spotlight = "";
         float noticeUntil, spotlightUntil;
         SentenceMeaning activeMeaning;
