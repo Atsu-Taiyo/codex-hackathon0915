@@ -28,7 +28,8 @@ namespace Hackathon.RoomOne
         void Awake()
         {
             Application.runInBackground = true;
-            if (!Application.isEditor) Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
+            if (!Application.isEditor && Application.platform != RuntimePlatform.WebGLPlayer)
+                Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
             Progress = RoomOneSave.Load();
             atlas = Resources.Load<Texture2D>("RoomOne/RoomOne_Actions_Atlas");
             backdrop = Resources.Load<Texture2D>("RoomOne/RoomOne_Workshop_Background");
