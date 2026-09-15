@@ -1,0 +1,263 @@
+{
+  "passed": 18,
+  "total": 18,
+  "method": "FBX reimport in Blender 4.5.9 LTS",
+  "checks": [
+    "binary header",
+    "one mesh per FBX",
+    "dimensions within 0.1 mm",
+    "triangle count preserved",
+    "UVs",
+    "material names",
+    "origin"
+  ],
+  "unity_editor_test": "Not run. Unity Editor is not installed. Helper C# not compiled in Unity.",
+  "results": [
+    {
+      "name": "Terrain_GrassTile_2x2",
+      "fbx_bytes": 36396,
+      "dimension_error_m": 1.3321510294872496e-07,
+      "triangles": 252,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Grass",
+        "Terrain_GrassEdge",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_GrassFloor_4x4",
+      "fbx_bytes": 36540,
+      "dimension_error_m": 3.2792229376354953e-07,
+      "triangles": 252,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Grass",
+        "Terrain_GrassEdge",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_GrassCliff_2x2",
+      "fbx_bytes": 36412,
+      "dimension_error_m": 1.1920928955078125e-07,
+      "triangles": 252,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Grass",
+        "Terrain_GrassEdge",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_GrassOuterCorner_2x2",
+      "fbx_bytes": 39132,
+      "dimension_error_m": 1.3321510294872496e-07,
+      "triangles": 368,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Grass",
+        "Terrain_GrassEdge",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_GrassInnerCorner_2x2",
+      "fbx_bytes": 39852,
+      "dimension_error_m": 1.3321510294872496e-07,
+      "triangles": 380,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Grass",
+        "Terrain_GrassEdge",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_GrassRamp_2x4_Rise1",
+      "fbx_bytes": 37340,
+      "dimension_error_m": 5.960464477539063e-08,
+      "triangles": 252,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Grass",
+        "Terrain_GrassEdge",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_GrassSteps_2x2_Rise1",
+      "fbx_bytes": 41932,
+      "dimension_error_m": 1.1920928955078125e-07,
+      "triangles": 476,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Grass",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_SandTile_2x2",
+      "fbx_bytes": 36364,
+      "dimension_error_m": 1.3321510294872496e-07,
+      "triangles": 252,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Sand",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_SandRamp_2x4_Rise1",
+      "fbx_bytes": 37308,
+      "dimension_error_m": 5.960464477539063e-08,
+      "triangles": 252,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Sand",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_ShoreSlope_2x2_Drop05",
+      "fbx_bytes": 37212,
+      "dimension_error_m": 1.4761462807655334e-07,
+      "triangles": 252,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Sand",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_GrassRound_4m",
+      "fbx_bytes": 41244,
+      "dimension_error_m": 2.683176489881589e-07,
+      "triangles": 556,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Grass",
+        "Terrain_GrassEdge",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_SandCliff_2x2",
+      "fbx_bytes": 36396,
+      "dimension_error_m": 1.1920928955078125e-07,
+      "triangles": 252,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Sand",
+        "Terrain_Soil",
+        "Terrain_SoilDeep",
+        "Terrain_SoilLight"
+      ]
+    },
+    {
+      "name": "Terrain_WorkshopFloor_2x2",
+      "fbx_bytes": 61340,
+      "dimension_error_m": 1.6445188322222748e-07,
+      "triangles": 2016,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Honey",
+        "Terrain_HoneyLight"
+      ]
+    },
+    {
+      "name": "Terrain_WorkshopWall_2m",
+      "fbx_bytes": 35852,
+      "dimension_error_m": 1.862645149230957e-07,
+      "triangles": 220,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Cream",
+        "Terrain_Honey"
+      ]
+    },
+    {
+      "name": "Terrain_WorkshopCorner_2m",
+      "fbx_bytes": 38604,
+      "dimension_error_m": 2.384185791015625e-07,
+      "triangles": 332,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Cream",
+        "Terrain_Honey"
+      ]
+    },
+    {
+      "name": "Backdrop_AmberMesas",
+      "fbx_bytes": 48892,
+      "dimension_error_m": 1.1920928955078125e-07,
+      "triangles": 1112,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Amber",
+        "Terrain_Sand"
+      ]
+    },
+    {
+      "name": "Backdrop_IceTerraces",
+      "fbx_bytes": 58972,
+      "dimension_error_m": 2.0603187067536055e-07,
+      "triangles": 1668,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Ice",
+        "Terrain_IceRock"
+      ]
+    },
+    {
+      "name": "Backdrop_CanyonArch",
+      "fbx_bytes": 65084,
+      "dimension_error_m": 2.384185791015625e-07,
+      "triangles": 1780,
+      "uv_present": true,
+      "origin_at_zero": true,
+      "used_materials": [
+        "Terrain_Amber",
+        "Terrain_AmberLight",
+        "Terrain_Sand"
+      ]
+    }
+  ]
+}
