@@ -46,39 +46,26 @@ namespace Hackathon.RoomOne
         }
         void Frame(Rect r, int actionRow, int index)
         {
-            DrawSprite(r, atlas, new Rect(index / 3f, 1f - (actionRow + 1) / 6f, 1f / 3, 1f / 6));
+            if (artwork && actionRow >= 0 && actionRow < RoomOneRules.Actions.Length)
+                DrawPose(r, artwork.Frame("robot:" + RoomOneRules.Actions[actionRow] + ":box", index));
         }
-        void DrawSprite(Rect rect, Texture2D texture, Rect uv)
+        void DrawPose(Rect rect, Texture2D texture)
         {
             if (!texture || Event.current.type != EventType.Repaint) return;
-            if (!pixelCutout) { GUI.DrawTextureWithTexCoords(rect, texture, uv); return; }
-            // Generated PNGs contain alpha. Reject low-alpha extraction haze at render time;
-            // the original generated files and opaque dark character outlines are preserved.
-            Matrix4x4 matrix = GUI.matrix;
-            Vector3 origin = matrix.MultiplyPoint3x4(new Vector3(rect.x, rect.y));
-            Vector3 size = matrix.MultiplyVector(new Vector3(rect.width, rect.height));
-            GUI.matrix = Matrix4x4.identity;
-            Graphics.DrawTexture(new Rect(origin.x, origin.y, size.x, size.y), texture, uv, 0, 0, 0, 0, Color.white, pixelCutout);
-            GUI.matrix = matrix;
+            // The PR supplies padded, bottom-aligned canvases. Keep their aspect ratio
+            // and full alpha silhouettes, including the raised head in reverse lift.
+            float scale = Mathf.Min(rect.width / texture.width, rect.height / texture.height);
+            var destination = new Rect(rect.center.x - texture.width * scale / 2,
+                rect.yMax - texture.height * scale, texture.width * scale, texture.height * scale);
+            GUI.DrawTexture(destination, texture, ScaleMode.StretchToFill, true);
         }
         void BoxLiftFrame(Rect stage, int index)
         {
-            // The generated strip has unequal empty margins; these measured row boundaries
-            // retain each entire pose, including the raised robot's head in the final frame.
-            int top = index == 0 ? 0 : index == 1 ? 500 : 1000;
-            int height = index == 2 ? 536 : 500;
-            float scale = stage.height / 536f;
-            Rect destination = new Rect(stage.center.x - 512 * scale, stage.yMax - height * scale, 1024 * scale, height * scale);
-            DrawSprite(destination, boxLiftAtlas, new Rect(0, 1f - (top + height) / 1536f, 1, height / 1536f));
+            if (artwork) DrawPose(stage, artwork.Frame("box:lift:robot", index));
         }
         void Entity(Rect r, string entity)
         {
-            if (entity == "robot")
-            {
-                // Generated alpha cutout preserves the supplied character and excludes app controls.
-                DrawSprite(r, reference, new Rect(.20f, .12f, .60f, .70f));
-            }
-            else DrawSprite(r, atlas, new Rect(.191f, .846f, .1f, .082f));
+            if (artwork) DrawPose(r, entity == "robot" ? artwork.robot : artwork.box);
         }
         void OnGUI()
         {
@@ -89,8 +76,8 @@ namespace Hackathon.RoomOne
                 (Screen.height - Input.mousePosition.y - (Screen.height - 900 * scale) / 2) / scale);
             GUI.matrix = Matrix4x4.TRS(new Vector3((Screen.width - 1600 * scale) / 2, (Screen.height - 900 * scale) / 2, 0), Quaternion.identity, Vector3.one * scale);
             GUI.DrawTexture(new Rect(0, 0, 1600, 900), Texture2D.whiteTexture, ScaleMode.StretchToFill, false, 0, Hex("FBF2E2"), 0, 0);
-            if (backdrop) GUI.DrawTexture(new Rect(0, 0, 1600, 900), backdrop, ScaleMode.StretchToFill);
-            bool free = modal == "";
+            if (artwork && artwork.background) GUI.DrawTexture(new Rect(0, 0, 1600, 900), artwork.background, ScaleMode.StretchToFill);
+            bool free = modal == "" && !NeedsLanguageSelection;
             GUI.enabled = free;
             DrawHeader(); DrawWorld(); DrawBuilder(); DrawFooter();
             GUI.enabled = true;
@@ -98,7 +85,7 @@ namespace Hackathon.RoomOne
             var e = Event.current;
             if (e.type == EventType.KeyDown)
             {
-                if (e.keyCode == KeyCode.Escape) { modal = ""; selected = -1; draggedWord = null; dragging = -1; hasDragged = false; e.Use(); }
+                if (e.keyCode == KeyCode.Escape && !NeedsLanguageSelection) { modal = ""; selected = -1; draggedWord = null; dragging = -1; hasDragged = false; e.Use(); }
                 else if (free && e.keyCode == KeyCode.Return) { RunSentence(); e.Use(); }
                 else if (free && selected >= 0 && (e.keyCode == KeyCode.Delete || e.keyCode == KeyCode.Backspace)) { RemoveCard(selected); e.Use(); }
                 else if (free && selected >= 0 && (e.keyCode == KeyCode.LeftArrow || e.keyCode == KeyCode.RightArrow))
@@ -111,9 +98,9 @@ namespace Hackathon.RoomOne
         }
         void DrawHeader()
         {
-            DrawVoiceButton();
+            if (!IsSwahili) DrawVoiceButton();
             if (Button(new Rect(34, 32, 84, 76), "⌂", White, 42, !playing && !voiceBusy)) ReturnToMap();
-            Label(new Rect(144, 31, 180, 27), "ENGLISH WORLD", 16, Muted, TextAnchor.MiddleLeft, true);
+            Label(new Rect(144, 31, 180, 27), (IsSwahili ? "SWAHILI WORLD" : "ENGLISH WORLD"), 16, Muted, TextAnchor.MiddleLeft, true);
             Label(new Rect(144, 57, 190, 48), "Room 01", 32, Ink, TextAnchor.MiddleLeft, true);
             Panel(new Rect(374, 24, 850, 197), new Color(1, 1, 1, .95f), 25);
             if (Button(new Rect(1046, 31, 155, 28), "▶", Hex("EEF3FC"), 14, !playing)) WatchGoal();
@@ -134,7 +121,7 @@ namespace Hackathon.RoomOne
         void DrawWorld()
         {
             Rect stage = new Rect(458, 229, 684, 342);
-            // Three-frame generated artwork remains the source of every standard action.
+            // The same PR frames drive the stage, goal, hints, collection and clear screen.
             if (activeMeaning == null || (activeMeaning.subject == "robot" && activeMeaning.target == "box")) Frame(stage, row, frame);
             else if (UsesBoxLiftAnimation) BoxLiftFrame(stage, frame);
             else DrawUnusual(stage);
@@ -145,19 +132,19 @@ namespace Hackathon.RoomOne
             }
             else
             {
-                var robotHit = new Rect(548, 281, 230, 251);
-                var boxHit = new Rect(850, 367, 223, 179);
+                var robotHit = new Rect(598, 305, 240, 266);
+                var boxHit = new Rect(837, 395, 187, 168);
                 if (!Progress.discoveredWords.Contains("robot")) Label(new Rect(630, 255, 46, 38), "+", 28 + (int)(3 * Mathf.Sin(Time.unscaledTime * 3)), Muted);
                 if (!Progress.discoveredWords.Contains("box")) Label(new Rect(934, 325, 46, 38), "+", 28 + (int)(3 * Mathf.Sin(Time.unscaledTime * 3)), Muted);
                 if (Hit(robotHit)) Discover("robot");
                 if (Hit(boxHit)) Discover("box");
-                if (robotHit.Contains(pointer)) Label(new Rect(576, 246, 190, 36), Progress.discoveredWords.Contains("robot") ? RoomOneRules.DisplayWord("robot") : "?", 25, Ink, TextAnchor.MiddleCenter, true);
-                if (boxHit.Contains(pointer)) Label(new Rect(844, 316, 210, 36), Progress.discoveredWords.Contains("box") ? RoomOneRules.DisplayWord("box") : "?", 25, Ink, TextAnchor.MiddleCenter, true);
+                if (robotHit.Contains(pointer)) Label(new Rect(576, 246, 190, 36), Progress.discoveredWords.Contains("robot") ? DisplayWord("robot") : "?", 25, Ink, TextAnchor.MiddleCenter, true);
+                if (boxHit.Contains(pointer)) Label(new Rect(844, 316, 210, 36), Progress.discoveredWords.Contains("box") ? DisplayWord("box") : "?", 25, Ink, TextAnchor.MiddleCenter, true);
             }
             if (Time.unscaledTime < spotlightUntil)
             {
                 Rect spot = new Rect(spotlight == "robot" ? 557 : 853, 278, 210, 46);
-                Panel(spot, Blue, 20); Label(spot, "+ " + RoomOneRules.DisplayWord(spotlight), 23, Ink, TextAnchor.MiddleCenter, true);
+                Panel(spot, Blue, 20); Label(spot, "+ " + DisplayWord(spotlight), 23, Ink, TextAnchor.MiddleCenter, true);
             }
         }
         void DrawUnusual(Rect stage)
@@ -176,18 +163,18 @@ namespace Hackathon.RoomOne
             }
             Entity(actor, activeMeaning.subject); Entity(target, activeMeaning.target);
             Label(new Rect(stage.x + 275, stage.y + 130, 90, 60), activeMeaning.action == "lift" ? "↑" : "→", 42, Hex("E0A146"));
-            Label(new Rect(stage.x + 55, stage.y + 25, stage.width - 110, 42), activeMeaning.Display, 23, Ink);
+            Label(new Rect(stage.x + 55, stage.y + 25, stage.width - 110, 42), DisplaySentence(activeMeaning), 23, Ink);
         }
         void WordCard(Rect r, string word, bool empty = false)
         {
             Panel(r, empty ? Hex("EEF2F7") : Blue, 16, !empty);
-            Label(r, empty ? "·" : RoomOneRules.DisplayWord(word), 23, empty ? Muted : Ink, TextAnchor.MiddleCenter, true);
+            Label(r, empty ? "·" : DisplayWord(word), 23, empty ? Muted : Ink, TextAnchor.MiddleCenter, true);
             if (!empty) Label(new Rect(r.x + 7, r.y + 22, 15, 26), "⋮", 20, Muted);
         }
         void DrawBuilder()
         {
             Panel(new Rect(32, 588, 1536, 253), new Color(1, 1, 1, .97f), 27);
-            DrawVoiceControls();
+            if (!IsSwahili) DrawVoiceControls();
             var e = Event.current;
             Rect tray = new Rect(48, 690, 1504, 80);
             for (int i = 0; i < 3; i++)
@@ -196,25 +183,26 @@ namespace Hackathon.RoomOne
                 if (selected == i || (draggedWord != null && r.Contains(pointer))) Panel(new Rect(r.x-3,r.y-3,r.width+6,r.height+6), Hex("71A5EA"), 18, false);
                 if (badSlot == i) Panel(new Rect(r.x-4,r.y-4,r.width+8,r.height+8), Hex("F5A76C"), 18, false);
                 WordCard(r, Cards[i], string.IsNullOrEmpty(Cards[i]) || (hasDragged && dragging == i));
-                if (!playing && GUI.enabled && e.type == EventType.MouseDown && e.button == 0 && r.Contains(pointer))
+                if ((!IsSwahili || i == 1) && !playing && GUI.enabled && e.type == EventType.MouseDown && e.button == 0 && r.Contains(pointer))
                 {
                     selected = i; dragging = i; draggedWord = Cards[i]; dragStart = pointer; hasDragged = false;
                     if (e.clickCount == 2) { RemoveCard(i); draggedWord = null; }
                     e.Use();
                 }
             }
-            string[] words = { "robot", "box", "push", "pull", "lift", "open", "shake", "break" };
+            string[] words = IsSwahili ? RoomOneRules.Actions : new[] { "robot", "box", "push", "pull", "lift", "open", "shake", "break" };
+            if (IsSwahili) Label(new Rect(1094, 604, 28, 70), ".", 28, Ink);
             int hoverRow = -1;
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
-                Rect r = new Rect(59 + i * 188, 696, 180, 70);
+                Rect r = new Rect((IsSwahili ? 247 : 59) + i * 188, 696, 180, 70);
                 bool known = Progress.globalVocabulary.Contains(word), used = Array.IndexOf(Cards, word) >= 0;
                 WordCard(r, word, !known || used || (hasDragged && dragging == -1 && draggedWord == word));
                 if (!known) Label(r, "?", 26, Muted);
                 if (known && !used && !playing && GUI.enabled && e.type == EventType.MouseDown && e.button == 0 && r.Contains(pointer))
                 { draggedWord = word; dragging = -1; dragStart = pointer; hasDragged = false; e.Use(); }
-                if (i >= 2 && known && !used && !playing && modal == "" && r.Contains(pointer) && draggedWord == null) hoverRow = i - 2;
+                if ((IsSwahili || i >= 2) && known && !used && !playing && modal == "" && r.Contains(pointer) && draggedWord == null) hoverRow = IsSwahili ? i : i - 2;
             }
             if (draggedWord != null && e.type == EventType.MouseDrag)
             { hasDragged |= Vector2.Distance(dragStart, pointer) > 8; e.Use(); }
@@ -247,6 +235,17 @@ namespace Hackathon.RoomOne
         }
         void DrawModal()
         {
+            if (NeedsLanguageSelection)
+            {
+                Panel(new Rect(0, 0, 1600, 900), new Color(.08f, .13f, .23f, .65f), 0, false);
+                Panel(new Rect(360, 230, 880, 440), White, 30);
+                Label(new Rect(420, 270, 760, 60), "Room 01 · Choose your language", 34, Ink, TextAnchor.MiddleCenter, true);
+                Label(new Rect(420, 345, 760, 45), "動詞を選んで、ロボットを動かそう", 24, Muted);
+                if (Button(new Rect(420, 432, 360, 110), "English / 英語", Blue, 28)) SelectLanguage(false);
+                if (Button(new Rect(820, 432, 360, 110), "Kiswahili / スワヒリ語", Green, 26)) SelectLanguage(true);
+                if (Button(new Rect(650, 588, 300, 44), "Back to map", Hex("EEF2F7"), 20)) ReturnToMap();
+                return;
+            }
             if (modal == "collection" || modal == "history")
             {
                 DrawCollection();
@@ -265,7 +264,7 @@ namespace Hackathon.RoomOne
             }
             else if (modal == "map")
             {
-                Label(new Rect(440, 181, 720, 57), "ENGLISH WORLD", 37, Ink, TextAnchor.MiddleCenter, true);
+                Label(new Rect(440, 181, 720, 57), (IsSwahili ? "SWAHILI WORLD" : "ENGLISH WORLD"), 37, Ink, TextAnchor.MiddleCenter, true);
                 Panel(new Rect(416, 326, 386, 290), Hex("EDF5FF"), 25);
                 Label(new Rect(446, 349, 325, 48), "Room 01  ·  The workshop", 25, Ink, TextAnchor.MiddleCenter, true);
                 Label(new Rect(446, 414, 325, 84), (Progress.isCleared ? "CLEAR" : "EXPLORE") + "\nWords " + (Progress.discoveredWords.Count + 6) + "/8  ·  Scenes " + Progress.discoveredCollections.Count + "/6", 22, Ink);

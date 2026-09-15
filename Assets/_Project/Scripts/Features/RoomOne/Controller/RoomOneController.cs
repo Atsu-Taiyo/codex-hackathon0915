@@ -6,14 +6,36 @@ namespace Hackathon.RoomOne
 {
     public sealed partial class RoomOneController : MonoBehaviour
     {
+        public bool IsSwahili { get; private set; }
+        public bool NeedsLanguageSelection { get; private set; } = true;
+        string DisplayWord(string word) => IsSwahili ? RoomOneRules.SwahiliWord(word) : RoomOneRules.DisplayWord(word);
+        string DisplaySentence(SentenceMeaning meaning) => IsSwahili
+            ? "Roboti " + RoomOneRules.SwahiliWord(meaning.action) + " sanduku."
+            : meaning.Display;
+        public bool SelectLanguage(bool swahili)
+        {
+            if (playing || voiceBusy) return false;
+            IsSwahili = swahili;
+            NeedsLanguageSelection = false;
+            Progress = RoomOneSave.Load(swahili);
+            if (swahili)
+            {
+                foreach (string noun in new[] { "robot", "box" })
+                    if (!Progress.discoveredWords.Contains(noun)) Progress.discoveredWords.Add(noun);
+                Progress.Normalize();
+            }
+            modal = "";
+            ResetCards();
+            WatchGoal();
+            return true;
+        }
         public RoomOneProgress Progress { get; private set; }
         public readonly string[] Cards = new string[3];
         public bool IsPlaying => playing;
         public int CurrentFrame => frame;
         public string Modal => modal;
         public bool UsesBoxLiftAnimation => RoomOneRules.IsBoxLift(activeMeaning);
-        Texture2D atlas, backdrop, reference, boxLiftAtlas;
-        Material pixelCutout;
+        RoomOneArtwork artwork;
         bool playing, goalPreview;
         int row, frame, selected = -1, badSlot = -1, dragging = -1;
         Vector2 dragStart, scroll;
@@ -32,13 +54,8 @@ namespace Hackathon.RoomOne
             if (!Application.isEditor && Application.platform != RuntimePlatform.WebGLPlayer)
                 Screen.SetResolution(1280, 720, FullScreenMode.Windowed);
             Progress = RoomOneSave.Load();
-            atlas = Resources.Load<Texture2D>("RoomOne/RoomOne_Actions_Atlas");
-            backdrop = Resources.Load<Texture2D>("RoomOne/RoomOne_Workshop_Background");
-            reference = Resources.Load<Texture2D>("RoomOne/RoomOne_Robot_Cutout");
-            boxLiftAtlas = Resources.Load<Texture2D>("RoomOne/RoomOne_BoxLiftsRobot_Atlas");
-            var shader = Resources.Load<Shader>("RoomOne/RoomOne_PixelCutout");
-            if (shader) pixelCutout = new Material(shader);
-            if (!atlas || !backdrop || !reference || !boxLiftAtlas || !pixelCutout) Debug.LogError("[RoomOne] Missing artwork.");
+            artwork = Resources.Load<RoomOneArtwork>("RoomOne/CloudRobotArtwork");
+            if (!artwork || !artwork.IsComplete) Debug.LogError("[RoomOne] CloudRobot artwork is incomplete. Run Tools > Room One > Connect CloudRobot Artwork.");
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.playOnAwake = false;
             const int rate = 22050;
@@ -48,7 +65,7 @@ namespace Hackathon.RoomOne
             chime = AudioClip.Create("Discovery", samples.Length, 1, rate, false);
             chime.SetData(samples, 0);
         }
-        void Start() { WatchGoal(); }
+        void Start() { modal = "language"; }
         public void Discover(string noun)
         {
             if (playing || !RoomOneRules.IsNoun(noun)) return;
@@ -56,14 +73,14 @@ namespace Hackathon.RoomOne
             {
                 Progress.discoveredWords.Add(noun);
                 Progress.Normalize();
-                RoomOneSave.Store(Progress);
+                RoomOneSave.Store(Progress, IsSwahili);
                 audioSource.PlayOneShot(chime);
             }
             row = frame = 0;
             activeMeaning = null;
             spotlight = noun;
             spotlightUntil = Time.unscaledTime + 1.4f;
-            Notify(RoomOneRules.DisplayWord(noun) + "  ·  added to your words");
+            Notify(DisplayWord(noun) + "  ·  added to your words");
         }
         void Choose(string word)
         {
@@ -80,7 +97,7 @@ namespace Hackathon.RoomOne
         }
         public bool PlaceCard(string word, int slot)
         {
-            if (playing || slot < 0 || slot >= 3 || !Progress.globalVocabulary.Contains(word)) return false;
+            if (NeedsLanguageSelection || (IsSwahili && (slot != 1 || RoomOneRules.IsNoun(word))) || playing || slot < 0 || slot >= 3 || !Progress.globalVocabulary.Contains(word)) return false;
             int source = Array.IndexOf(Cards, word);
             if (source >= 0) SwapCards(source, slot);
             else Cards[slot] = word;
@@ -89,19 +106,21 @@ namespace Hackathon.RoomOne
         }
         public void RemoveCard(int slot)
         {
-            if (!playing && slot >= 0 && slot < 3) Cards[slot] = null;
+            if (!playing && (!IsSwahili || slot == 1) && slot >= 0 && slot < 3) Cards[slot] = null;
         }
         public void ResetCards()
         {
             if (playing) return;
             Array.Clear(Cards, 0, Cards.Length);
+            if (IsSwahili) { Cards[0] = "robot"; Cards[2] = "box"; }
             selected = badSlot = dragging = -1;
             draggedWord = null;
             row = frame = 0; activeMeaning = null;
         }
         public bool RunSentence()
         {
-            if (playing) return false;
+            if (playing || NeedsLanguageSelection) return false;
+            if (IsSwahili && (Cards[0] != "robot" || Cards[2] != "box")) return false;
             if (!RoomOneRules.TryInterpret(Cards, out var meaning, out badSlot))
             {
                 Notify("Something is missing here. Try moving a card.");
@@ -112,7 +131,7 @@ namespace Hackathon.RoomOne
         }
         public void SwapCards(int from, int to)
         {
-            if (playing || from < 0 || from > 2 || to < 0 || to > 2) return;
+            if (IsSwahili || playing || from < 0 || from > 2 || to < 0 || to > 2) return;
             (Cards[from], Cards[to]) = (Cards[to], Cards[from]);
             selected = to;
             badSlot = -1;
@@ -151,7 +170,7 @@ namespace Hackathon.RoomOne
             RoomOneRules.Complete(Progress, meaning, record);
             if (record)
             {
-                RoomOneSave.Store(Progress);
+                RoomOneSave.Store(Progress, IsSwahili);
                 Notify(RoomOneRules.IsGoal(meaning) ? "Goal discovered!" : "Experiment saved. What will you try next?");
             }
             playing = false;
@@ -166,7 +185,6 @@ namespace Hackathon.RoomOne
         {
             ReleaseCollectionStyle();
             if (chime) Destroy(chime);
-            if (pixelCutout) Destroy(pixelCutout);
         }
     }
 }

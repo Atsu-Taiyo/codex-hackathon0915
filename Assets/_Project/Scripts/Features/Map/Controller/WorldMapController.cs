@@ -20,7 +20,9 @@ namespace Hackathon.Map
         static readonly Color Muted = new Color(.38f, .47f, .46f);
         static readonly Color Paper = new Color(.99f, .98f, .93f, .97f);
         static readonly Color Green = new Color(.19f, .43f, .32f);
-        readonly Rect details = new Rect(934, 432, 314, 246);
+        static readonly Rect TitleRect = new Rect(24, 24, 112, 44);
+        static readonly Rect MoveHintRect = new Rect(24, 646, 270, 38);
+        static readonly Rect EnterRect = new Rect(1014, 636, 242, 54);
         GUIStyle label, button;
 
         void Awake()
@@ -36,8 +38,7 @@ namespace Hackathon.Map
             if (robo == null) return;
             // IMGUI buttons must not also send a floor destination to the motor.
             Vector2 pointer = ScreenToCanvas(Input.mousePosition);
-            bool overHud = pointer.y < 106 || pointer.y > 626 || details.Contains(pointer) ||
-                (NearWorkshop && new Rect(432, 556, 384, 49).Contains(pointer)) ||
+            bool overHud = TitleRect.Contains(pointer) || MoveHintRect.Contains(pointer) || EnterRect.Contains(pointer) ||
                 MarkerRect(workshopEntrance).Contains(pointer) || MarkerRect(meadowEntrance).Contains(pointer);
             robo.acceptInput = !overHud;
             if (overHud && !robo.HasDestination) robo.StopWalking();
@@ -69,7 +70,7 @@ namespace Hackathon.Map
         {
             if (entrance == null || mapCamera == null) return Rect.zero;
             var point = ScreenToCanvas(mapCamera.WorldToScreenPoint(entrance.position + Vector3.up * 2.6f));
-            return new Rect(point.x - 104, point.y - 20, 208, 44);
+            return new Rect(point.x - 86, point.y - 19, 172, 38);
         }
 
         void OnGUI()
@@ -85,36 +86,22 @@ namespace Hackathon.Map
             float scale = Mathf.Min(Screen.width / 1280f, Screen.height / 720f);
             GUI.matrix = Matrix4x4.TRS(new Vector3((Screen.width - 1280 * scale) / 2,
                 (Screen.height - 720 * scale) / 2, 0), Quaternion.identity, Vector3.one * scale);
-            Panel(new Rect(24, 22, 1232, 79), Paper, 18);
-            Text(new Rect(45, 32, 430, 20), "ENGLISH WORLD  /  YOUR JOURNEY", 12, Muted, true);
-            Text(new Rect(44, 50, 550, 43), "A little world of discoveries", 27, Ink, true);
-            Text(new Rect(940, 35, 286, 27), Progress.isCleared ? "01 / 01   ROOM COMPLETE" : "01   ROOM TO EXPLORE", 16, Green, true);
-            Text(new Rect(940, 64, 286, 23), (Progress.discoveredWords.Count + 6) + " words   /   " + Progress.discoveredCollections.Count + " discoveries", 14, Muted);
+            Panel(TitleRect, Paper, 14);
+            Text(new Rect(44, 29, 78, 32), "Map", 22, Ink, true);
+            Marker(workshopEntrance, Progress.isCleared ? "01  Workshop  ✓" : "01  Workshop", 1);
+            Marker(meadowEntrance, "02  Meadow", 2);
 
-            Marker(workshopEntrance, Progress.isCleared ? "01  Workshop  /  CLEAR" : "01  The workshop", 1);
-            Marker(meadowEntrance, "02  The meadow  /  SOON", 2);
-
-            Panel(details, Paper, 20);
-            Text(new Rect(958, 452, 266, 22), SelectedRoom == 1 ? "ROOM 01  /  READY TO EXPLORE" : "ROOM 02  /  COMING LATER", 12, Green, true);
-            Text(new Rect(956, 481, 268, 37), SelectedRoom == 1 ? "The workshop" : "The meadow", 27, Ink, true);
-            Text(new Rect(958, 526, 258, 54), SelectedRoom == 1 ? "Meet a robot. Move a box.\nDiscover what your words can do." : "Another place to discover.\nThis room is still being built.", 16, Muted);
             if (SelectedRoom == 1)
             {
-                Text(new Rect(958, 582, 258, 24), "Words  " + (Progress.discoveredWords.Count + 6) + " / 8     ·     Scenes  " + Progress.discoveredCollections.Count + " / 6", 13, Green, true);
-                if (Action(new Rect(956, 619, 270, 42), Progress.isCleared ? "Explore again  >" : "Enter Room 1  >", Green)) EnterRoomOne();
+                if (Action(EnterRect, NearWorkshop ? "Enter  (E)" : "Enter", Green)) EnterRoomOne();
             }
             else
             {
-                Panel(new Rect(956, 619, 270, 42), new Color(.86f, .88f, .83f), 10);
-                Text(new Rect(972, 627, 238, 27), "Not open yet", 17, Muted, true);
+                Panel(EnterRect, Paper, 10);
+                Text(new Rect(1050, 648, 170, 30), "Coming soon", 17, Muted, true);
             }
-            Panel(new Rect(24, 626, 570, 52), Paper, 14);
-            Text(new Rect(42, 640, 539, 28), "WASD / Arrows   Move     ·     Click the ground to walk", 16, Ink);
-            if (NearWorkshop)
-            {
-                if (Action(new Rect(432, 556, 384, 49), "E / Enter   ·   Enter the workshop", Green)) EnterRoomOne();
-            }
-            Text(new Rect(28, 688, 650, 22), "Follow your curiosity. Every experiment is saved.", 13, Ink);
+            Panel(MoveHintRect, Paper, 12);
+            Text(new Rect(39, 651, 245, 28), "WASD / ↑↓←→  ·  Click", 14, Ink);
             GUI.matrix = previous;
         }
 

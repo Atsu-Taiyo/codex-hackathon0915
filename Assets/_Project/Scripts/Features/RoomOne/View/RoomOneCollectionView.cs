@@ -28,7 +28,9 @@ namespace Hackathon.RoomOne
                 foreach (var state in new[] { style.normal, style.hover, style.active, style.focused })
                 {
                     state.background = thumb ? collectionScrollThumb : null;
+#if UNITY_EDITOR
                     state.scaledBackgrounds = null;
+#endif
                 }
             }
         }
@@ -97,12 +99,12 @@ namespace Hackathon.RoomOne
                 if (known)
                 {
                     Frame(new Rect(rect.x + 12, rect.y + 23, 280, 140), i, 2);
-                    Label(new Rect(rect.x + 20, rect.y + 170, 210, 30), RoomOneRules.Verbs[i], 22, CollectionInk, TextAnchor.MiddleLeft, true);
+                    Label(new Rect(rect.x + 20, rect.y + 170, 210, 30), DisplayWord(RoomOneRules.Actions[i]), 22, CollectionInk, TextAnchor.MiddleLeft, true);
                     var play = new Rect(rect.xMax - 52, rect.y + 167, 34, 34);
                     Panel(play, hover ? CollectionAccent : Hex("E2E9DF"), 17, false);
                     Label(new Rect(play.x + 2, play.y, play.width, play.height), "▶", 13, hover ? White : CollectionAccent);
                     // One native IMGUI target covers the whole tile, including its illustration.
-                    if (GUI.Button(rect, new GUIContent("", "Replay " + RoomOneRules.Verbs[i]), GUIStyle.none))
+                    if (GUI.Button(rect, new GUIContent("", "Replay " + DisplayWord(RoomOneRules.Actions[i])), GUIStyle.none))
                         Replay(new SentenceMeaning { subject = "robot", action = RoomOneRules.Actions[i], target = "box" });
                 }
                 else
@@ -141,10 +143,10 @@ namespace Hackathon.RoomOne
                 bool hover = rect.Contains(Event.current.mousePosition);
                 if (hover) Panel(rect, CollectionTile, 10, false);
                 Label(new Rect(18, rect.y, 50, rect.height), (count - i).ToString("00"), 14, CollectionMuted, TextAnchor.MiddleLeft);
-                Label(new Rect(86, rect.y, width - 158, rect.height), meaning.Display, 22, CollectionInk, TextAnchor.MiddleLeft);
+                Label(new Rect(86, rect.y, width - 158, rect.height), DisplaySentence(meaning), 22, CollectionInk, TextAnchor.MiddleLeft);
                 Label(new Rect(width - 54, rect.y, 36, rect.height), "▶", 14, hover ? CollectionAccent : CollectionMuted);
                 Panel(new Rect(18, rect.yMax, width - 36, 1), CollectionLine, 0, false);
-                if (GUI.Button(rect, new GUIContent("", "Replay " + meaning.Display), GUIStyle.none)) replay = meaning;
+                if (GUI.Button(rect, new GUIContent("", "Replay " + DisplaySentence(meaning)), GUIStyle.none)) replay = meaning;
             }
             GUI.EndScrollView();
             GUI.skin = previousSkin;

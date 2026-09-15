@@ -12,6 +12,14 @@ namespace Hackathon.RoomOne
             int index = Array.IndexOf(Actions, action);
             return index >= 0 ? Verbs[index] : action;
         }
+        public static readonly string[] SwahiliVerbs = { "inasukuma", "inavuta", "inainua", "inafungua", "inatikisa", "inavunja" };
+        public static string SwahiliWord(string word)
+        {
+            if (word == "robot") return "Roboti";
+            if (word == "box") return "sanduku";
+            int index = Array.IndexOf(Actions, word);
+            return index >= 0 ? SwahiliVerbs[index] : word;
+        }
         public static bool IsNoun(string word) => word == "robot" || word == "box";
         public static string DisplayWord(string word) => IsNoun(word) ? "the " + word : DisplayVerb(word);
         public static bool TryInterpret(IList<string> cards, out SentenceMeaning meaning, out int badSlot)

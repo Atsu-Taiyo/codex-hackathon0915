@@ -112,7 +112,7 @@ namespace Hackathon.Editor
                 animation.AddClip(idle,"Idle"); animation.AddClip(AssetDatabase.LoadAssetAtPath<AnimationClip>(Folder+"/Walk.anim"),"Walk");
                 animation.clip=idle; animation.playAutomatically=true; animation.cullingType=AnimationCullingType.AlwaysAnimate;
                 var controller=root.AddComponent<CharacterController>(); controller.height=1; controller.radius=.26f; controller.center=new Vector3(0,.5f,0);
-                controller.stepOffset=.12f; controller.skinWidth=.015f; controller.minMoveDistance=0; controller.slopeLimit=40;
+                controller.stepOffset=.3f; controller.skinWidth=.015f; controller.minMoveDistance=0; controller.slopeLimit=40;
                 root.AddComponent<CodexRoboMotor>();
                 PrefabUtility.SaveAsPrefabAsset(root,PrefabPath);
                 File.WriteAllText("Temp/CodexRobo-rig.txt","Vertices: "+vertices.Length+"\nBone vertex counts: "+string.Join(",",counts)+"\nSix bones, normalized weights, Idle and Walk clips.\n");

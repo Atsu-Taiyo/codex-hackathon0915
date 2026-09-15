@@ -9,7 +9,8 @@ namespace Hackathon.Editor
     public static class RoomOnePlaytest
     {
         static bool hadSave;
-        static string backup;
+        static string backup, swahiliBackup;
+        static bool hadSwahiliSave;
         static int checks;
         static RoomOnePlaytest()
         {
@@ -28,10 +29,13 @@ namespace Hackathon.Editor
             checks = 0;
             hadSave = PlayerPrefs.HasKey(RoomOneSave.Key);
             backup = PlayerPrefs.GetString(RoomOneSave.Key);
+            hadSwahiliSave = PlayerPrefs.HasKey(RoomOneSave.Key + ".sw");
+            swahiliBackup = PlayerPrefs.GetString(RoomOneSave.Key + ".sw");
             try
             {
                 var room = UnityEngine.Object.FindAnyObjectByType<RoomOneController>();
                 Check(room != null, "Controller exists");
+                Check(room.SelectLanguage(false), "English selected at entry");
                 while (room.IsPlaying) yield return null;
                 room.Progress.isCleared = false;
                 room.Progress.discoveredWords.Clear(); room.Progress.discoveredCollections.Clear(); room.Progress.executionHistory.Clear();
@@ -85,7 +89,32 @@ namespace Hackathon.Editor
                 Check(room.Progress.executionHistory.Count == 8, "Replay does not duplicate history");
                 var loaded = RoomOneSave.Load();
                 Check(loaded.isCleared && loaded.executionHistory.Count == 8 && loaded.discoveredCollections.Count == 6, "Full progress persistence");
-                File.WriteAllText("Temp/RoomOne-playtest.txt", checks + " runtime checks passed; all six actions completed; original save restored");
+                string englishSave = PlayerPrefs.GetString(RoomOneSave.Key);
+                Check(room.SelectLanguage(true), "Swahili selected");
+                while (room.IsPlaying) yield return null;
+                room.Progress.executionHistory.Clear(); room.Progress.discoveredCollections.Clear(); room.Progress.isCleared = false;
+                Check(room.Cards[0] == "robot" && room.Cards[2] == "box", "Swahili nouns fixed initially");
+                Check(!room.PlaceCard("box", 0) && !room.PlaceCard("push", 2), "Fixed noun slots reject drops");
+                room.RemoveCard(0); room.SwapCards(0, 2);
+                Check(room.Cards[0] == "robot" && room.Cards[2] == "box", "Fixed nouns resist removal and swapping");
+                string[] expectedVerbs = { "inasukuma", "inavuta", "inainua", "inafungua", "inatikisa", "inavunja" };
+                for (int i = 0; i < RoomOneRules.Actions.Length; i++)
+                {
+                    string action = RoomOneRules.Actions[i];
+                    Check(RoomOneRules.SwahiliWord(action) == expectedVerbs[i], "Swahili label " + action);
+                    Check(room.PlaceCard(action, 1) && room.RunSentence(), "Swahili action starts " + action);
+                    while (room.IsPlaying) yield return null;
+                    Check(room.CurrentFrame == 2, "Swahili animation completes " + action);
+                }
+                var swahili = RoomOneSave.Load(true);
+                Check(swahili.executionHistory.Count == 6 && swahili.discoveredCollections.Count == 6 && swahili.isCleared, "Swahili progress persisted");
+                Check(PlayerPrefs.GetString(RoomOneSave.Key) == englishSave, "Swahili leaves English save unchanged");
+                room.ResetCards();
+                Check(room.Cards[0] == "robot" && room.Cards[1] == null && room.Cards[2] == "box", "Swahili reset preserves sentence frame");
+                Check(room.SelectLanguage(false), "Return to English");
+                while (room.IsPlaying) yield return null;
+                Check(room.Progress.executionHistory.Count == 8 && Array.TrueForAll(room.Cards, string.IsNullOrEmpty), "English progress and free builder restored");
+                File.WriteAllText("Temp/RoomOne-playtest.txt", checks + " runtime checks passed; English and Swahili; all six actions completed; original save restored");
                 Debug.Log("[RoomOne] " + checks + " runtime checks passed.");
             }
             finally { Restore(); }
@@ -94,7 +123,8 @@ namespace Hackathon.Editor
         {
             if (backup == null) return;
             if (hadSave) PlayerPrefs.SetString(RoomOneSave.Key, backup); else PlayerPrefs.DeleteKey(RoomOneSave.Key);
-            PlayerPrefs.Save(); backup = null;
+            if (hadSwahiliSave) PlayerPrefs.SetString(RoomOneSave.Key + ".sw", swahiliBackup); else PlayerPrefs.DeleteKey(RoomOneSave.Key + ".sw");
+            PlayerPrefs.Save(); backup = swahiliBackup = null;
         }
     }
 }

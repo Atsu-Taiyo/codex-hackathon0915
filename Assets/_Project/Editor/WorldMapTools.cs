@@ -23,6 +23,11 @@ namespace Hackathon.Editor
                 switch (command)
                 {
                     case "create": WorldMapSetup.Create(); break;
+                    case "art": WorldMapArtSetup.Refresh(); RoomOneArtworkSetup.Connect(); break;
+                    case "room":
+                        if (EditorApplication.isPlaying || SceneManager.GetActiveScene().isDirty)
+                            throw new InvalidOperationException("Stop Play mode and save the scene first.");
+                        EditorSceneManager.OpenScene(WorldNavigation.RoomOneScene); break;
                     case "open":
                         if (EditorApplication.isPlaying || SceneManager.GetActiveScene().isDirty)
                             throw new InvalidOperationException("Stop Play mode and save the current scene before opening the map.");

@@ -1,0 +1,657 @@
+{
+  "schema_version": 1,
+  "feature": "RoomOne",
+  "asset_type": "2D pose sequences",
+  "source_directory": "ArtSource/Features/RoomOne/CloudRobotSprites",
+  "sources": {
+    "actions": {
+      "file": "CloudRobot_Actions_Sheet.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "4472c3c918373394878c13d2f0f9ad2c98877e7d7ee2b87b56d89682b3b1d9bf"
+    },
+    "box_lift": {
+      "file": "CloudRobot_BoxLiftsRobot_Sheet.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "sha256": "3821e4bf8d5bf6b64c89e7d0a0df32c93d53f963e8e32fa658619e45c14b1ec0"
+    }
+  },
+  "coordinate_system": "source_rect_ltrb_px: top-left origin; right/bottom exclusive",
+  "placement": "Native source pixels, no scaling; bottom-aligned transparent padding to a common canvas per sequence.",
+  "alpha": "Source RGBA preserved byte-for-byte inside each crop.",
+  "runtime_integration": "Reference/import assets only; no Animator clips, rig, scene or runtime changes.",
+  "clips": [
+    {
+      "id": "robot:push:box",
+      "folder": "RobotPushBox",
+      "label": "ロボットが箱を押す",
+      "sheet": "actions",
+      "source_row": 1,
+      "frame_duration_ms": 700,
+      "canvas_size": [
+        418,
+        245
+      ],
+      "frames": [
+        {
+          "file": "Frames/RobotPushBox/RoomOne_CloudRobot_RobotPushBox_01_Ready.png",
+          "source_rect_ltrb_px": [
+            0,
+            0,
+            418,
+            210
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            35,
+            418,
+            245
+          ],
+          "sha256": "7b35f6e5a408bfd855206664ad853d01135c51abcceb015c8aed830e6b3115c2",
+          "order": 1,
+          "stage": "Ready",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotPushBox/RoomOne_CloudRobot_RobotPushBox_02_Push.png",
+          "source_rect_ltrb_px": [
+            418,
+            0,
+            836,
+            210
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            35,
+            418,
+            245
+          ],
+          "sha256": "e11442f976578725b6e812278a175e39d4d927116ba7178c7970e2f4f8107a36",
+          "order": 2,
+          "stage": "Push",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotPushBox/RoomOne_CloudRobot_RobotPushBox_03_Finish.png",
+          "source_rect_ltrb_px": [
+            836,
+            0,
+            1254,
+            210
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            35,
+            418,
+            245
+          ],
+          "sha256": "0c77c3aca1dd51df7529ce350ab527594d12027554cfe0841fbb3d6d25b15e7e",
+          "order": 3,
+          "stage": "Finish",
+          "source": "actions"
+        }
+      ]
+    },
+    {
+      "id": "robot:pull:box",
+      "folder": "RobotPullBox",
+      "label": "ロボットが箱を引く",
+      "sheet": "actions",
+      "source_row": 2,
+      "frame_duration_ms": 700,
+      "canvas_size": [
+        418,
+        245
+      ],
+      "frames": [
+        {
+          "file": "Frames/RobotPullBox/RoomOne_CloudRobot_RobotPullBox_01_Ready.png",
+          "source_rect_ltrb_px": [
+            0,
+            210,
+            418,
+            405
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "77337ac2f76ad5f0e463e7a6b29872d37bac904c94a6093331bd61377e22028f",
+          "order": 1,
+          "stage": "Ready",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotPullBox/RoomOne_CloudRobot_RobotPullBox_02_Pull.png",
+          "source_rect_ltrb_px": [
+            418,
+            210,
+            836,
+            405
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "6203d14f1787f357fb8ec186d15a87549fecd22514ebed68020d2465ff648c69",
+          "order": 2,
+          "stage": "Pull",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotPullBox/RoomOne_CloudRobot_RobotPullBox_03_Finish.png",
+          "source_rect_ltrb_px": [
+            836,
+            210,
+            1254,
+            405
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "2f35ac6b2d0b4c1eaff4e8bffeb967b5877b3c6720f99f1c23a75432142cb1b4",
+          "order": 3,
+          "stage": "Finish",
+          "source": "actions"
+        }
+      ]
+    },
+    {
+      "id": "robot:lift:box",
+      "folder": "RobotLiftBox",
+      "label": "ロボットが箱を持ち上げる",
+      "sheet": "actions",
+      "source_row": 3,
+      "frame_duration_ms": 700,
+      "canvas_size": [
+        418,
+        245
+      ],
+      "frames": [
+        {
+          "file": "Frames/RobotLiftBox/RoomOne_CloudRobot_RobotLiftBox_01_Ready.png",
+          "source_rect_ltrb_px": [
+            0,
+            405,
+            418,
+            650
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            0,
+            418,
+            245
+          ],
+          "sha256": "7a7ae8061b180cfbb761a542e8a1552467ab4b4585fc5dd2f6dd50b268c8a974",
+          "order": 1,
+          "stage": "Ready",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotLiftBox/RoomOne_CloudRobot_RobotLiftBox_02_Raise.png",
+          "source_rect_ltrb_px": [
+            418,
+            405,
+            836,
+            650
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            0,
+            418,
+            245
+          ],
+          "sha256": "3a1d65df174eb75dbd7dfb7c967651c98371e76748a9e70769611ee2d6586633",
+          "order": 2,
+          "stage": "Raise",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotLiftBox/RoomOne_CloudRobot_RobotLiftBox_03_Success.png",
+          "source_rect_ltrb_px": [
+            836,
+            405,
+            1254,
+            650
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            0,
+            418,
+            245
+          ],
+          "sha256": "65837613aa24345cd5ac5f88b04b6821b6be84d47bb7357ca6e12d26cae45e72",
+          "order": 3,
+          "stage": "Success",
+          "source": "actions"
+        }
+      ]
+    },
+    {
+      "id": "robot:open:box",
+      "folder": "RobotOpenBox",
+      "label": "ロボットが箱を開ける",
+      "sheet": "actions",
+      "source_row": 4,
+      "frame_duration_ms": 700,
+      "canvas_size": [
+        418,
+        245
+      ],
+      "frames": [
+        {
+          "file": "Frames/RobotOpenBox/RoomOne_CloudRobot_RobotOpenBox_01_Closed.png",
+          "source_rect_ltrb_px": [
+            0,
+            650,
+            418,
+            845
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "d0693de1781b100a4848a33f8699195af239d2a758fcf0a53ab60025ca4b4c87",
+          "order": 1,
+          "stage": "Closed",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotOpenBox/RoomOne_CloudRobot_RobotOpenBox_02_OpenFlap.png",
+          "source_rect_ltrb_px": [
+            418,
+            650,
+            836,
+            845
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "f37c05fa1f463fc19404e388769e82f7ed5674530cf27ebe173130c09d31053a",
+          "order": 2,
+          "stage": "OpenFlap",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotOpenBox/RoomOne_CloudRobot_RobotOpenBox_03_Opened.png",
+          "source_rect_ltrb_px": [
+            836,
+            650,
+            1254,
+            845
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "155fd42782b93f36b3efda79c0c61a057e1fcdf08e792616542c9a260a9e9b5b",
+          "order": 3,
+          "stage": "Opened",
+          "source": "actions"
+        }
+      ]
+    },
+    {
+      "id": "robot:shake:box",
+      "folder": "RobotShakeBox",
+      "label": "ロボットが箱を振る",
+      "sheet": "actions",
+      "source_row": 5,
+      "frame_duration_ms": 700,
+      "canvas_size": [
+        418,
+        245
+      ],
+      "frames": [
+        {
+          "file": "Frames/RobotShakeBox/RoomOne_CloudRobot_RobotShakeBox_01_Hold.png",
+          "source_rect_ltrb_px": [
+            0,
+            845,
+            418,
+            1040
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "e4990d024704e3e3c514115fd45c7041940d4014336a35d41832d0014edf8392",
+          "order": 1,
+          "stage": "Hold",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotShakeBox/RoomOne_CloudRobot_RobotShakeBox_02_ShakeLeft.png",
+          "source_rect_ltrb_px": [
+            418,
+            845,
+            836,
+            1040
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "a93f0024d3b184f48dbbab06fd952797ad9974f74d93fc3ab843231f3bc0bdc5",
+          "order": 2,
+          "stage": "ShakeLeft",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotShakeBox/RoomOne_CloudRobot_RobotShakeBox_03_ShakeRight.png",
+          "source_rect_ltrb_px": [
+            836,
+            845,
+            1254,
+            1040
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            50,
+            418,
+            245
+          ],
+          "sha256": "1dfc382c6b84a396e425443b429d2ce3d0d6829266723a0c1b806f6c9f724c42",
+          "order": 3,
+          "stage": "ShakeRight",
+          "source": "actions"
+        }
+      ]
+    },
+    {
+      "id": "robot:break:box",
+      "folder": "RobotBreakBox",
+      "label": "ロボットが箱を壊す",
+      "sheet": "actions",
+      "source_row": 6,
+      "frame_duration_ms": 700,
+      "canvas_size": [
+        418,
+        245
+      ],
+      "frames": [
+        {
+          "file": "Frames/RobotBreakBox/RoomOne_CloudRobot_RobotBreakBox_01_Ready.png",
+          "source_rect_ltrb_px": [
+            0,
+            1040,
+            418,
+            1254
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            31,
+            418,
+            245
+          ],
+          "sha256": "52590646c5cbfe859eaed10ca7cefd6ed0985a8f0e4af5095cb5ca01c966d417",
+          "order": 1,
+          "stage": "Ready",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotBreakBox/RoomOne_CloudRobot_RobotBreakBox_02_Impact.png",
+          "source_rect_ltrb_px": [
+            418,
+            1040,
+            836,
+            1254
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            31,
+            418,
+            245
+          ],
+          "sha256": "9d27b1e0c6f5126c1335a2f34a55cdda3cfb5c041497b142df292a48a5d20645",
+          "order": 2,
+          "stage": "Impact",
+          "source": "actions"
+        },
+        {
+          "file": "Frames/RobotBreakBox/RoomOne_CloudRobot_RobotBreakBox_03_Broken.png",
+          "source_rect_ltrb_px": [
+            836,
+            1040,
+            1254,
+            1254
+          ],
+          "canvas_size": [
+            418,
+            245
+          ],
+          "paste_offset_px": [
+            0,
+            31,
+            418,
+            245
+          ],
+          "sha256": "7dd41e80b4978bf61a71af7d632371d5aed871a3ce4cd0ecc3beb18ca18fd72f",
+          "order": 3,
+          "stage": "Broken",
+          "source": "actions"
+        }
+      ]
+    },
+    {
+      "id": "box:lift:robot",
+      "folder": "BoxLiftRobot",
+      "label": "箱がロボットを持ち上げる",
+      "sheet": "box_lift",
+      "source_row": null,
+      "frame_duration_ms": 700,
+      "canvas_size": [
+        1024,
+        561
+      ],
+      "frames": [
+        {
+          "file": "Frames/BoxLiftRobot/RoomOne_CloudRobot_BoxLiftRobot_01_Ready.png",
+          "source_rect_ltrb_px": [
+            0,
+            0,
+            1024,
+            450
+          ],
+          "canvas_size": [
+            1024,
+            561
+          ],
+          "paste_offset_px": [
+            0,
+            111,
+            1024,
+            561
+          ],
+          "sha256": "2cf8d8119864b04526b7c003b6549b70b7efc120e3ec3766cc474224c29d4a4d",
+          "order": 1,
+          "stage": "Ready",
+          "source": "box_lift"
+        },
+        {
+          "file": "Frames/BoxLiftRobot/RoomOne_CloudRobot_BoxLiftRobot_02_Raise.png",
+          "source_rect_ltrb_px": [
+            0,
+            450,
+            1024,
+            975
+          ],
+          "canvas_size": [
+            1024,
+            561
+          ],
+          "paste_offset_px": [
+            0,
+            36,
+            1024,
+            561
+          ],
+          "sha256": "fe5cca8d7adb2fa6a9aa8568c54718394a8bd59d355272a30aa216725f444fad",
+          "order": 2,
+          "stage": "Raise",
+          "source": "box_lift"
+        },
+        {
+          "file": "Frames/BoxLiftRobot/RoomOne_CloudRobot_BoxLiftRobot_03_Overhead.png",
+          "source_rect_ltrb_px": [
+            0,
+            975,
+            1024,
+            1536
+          ],
+          "canvas_size": [
+            1024,
+            561
+          ],
+          "paste_offset_px": [
+            0,
+            0,
+            1024,
+            561
+          ],
+          "sha256": "65f3d165991deccc3896b2b9f1f0046f54fcf96a69c2783c7acbc307ab1dfeb8",
+          "order": 3,
+          "stage": "Overhead",
+          "source": "box_lift"
+        }
+      ]
+    }
+  ],
+  "characters": [
+    {
+      "file": "Characters/RoomOne_CloudRobot_RobotIdle.png",
+      "source_rect_ltrb_px": [
+        65,
+        20,
+        235,
+        210
+      ],
+      "canvas_size": [
+        170,
+        190
+      ],
+      "paste_offset_px": [
+        0,
+        0,
+        170,
+        190
+      ],
+      "sha256": "4c035122beca09d7a9ff978acade8c511956072419bc6cc51d722bcc9584bac1",
+      "id": "RobotIdle",
+      "source": "actions"
+    },
+    {
+      "file": "Characters/RoomOne_CloudRobot_BoxIdle.png",
+      "source_rect_ltrb_px": [
+        237,
+        85,
+        370,
+        205
+      ],
+      "canvas_size": [
+        133,
+        120
+      ],
+      "paste_offset_px": [
+        0,
+        0,
+        133,
+        120
+      ],
+      "sha256": "2e43e34d040a472ac56658e5b3d6d3b052e38d69d4fbba81951292d9d51a0c9a",
+      "id": "BoxIdle",
+      "source": "actions"
+    }
+  ]
+}

@@ -77,9 +77,13 @@ namespace Hackathon.Editor
             check(!fresh.isCleared && fresh.executionHistory.Count == 0, "Goal preview and replay never grant progress");
             var copy = JsonUtility.FromJson<RoomOneProgress>(JsonUtility.ToJson(progress)); copy.Normalize();
             check(copy.isCleared && copy.executionHistory.Count == 13 && copy.discoveredCollections.Count == 6, "Save round trip");
-            foreach (string asset in new[] { "RoomOne_Actions_Atlas", "RoomOne_Workshop_Background", "RoomOne_Robot_Reference", "RoomOne_Robot_Cutout", "RoomOne_BoxLiftsRobot_Atlas" })
-                check(Resources.Load<Texture2D>("RoomOne/" + asset) != null, "Asset available: " + asset);
-            check(Resources.Load<Shader>("RoomOne/RoomOne_PixelCutout").isSupported, "Transparent sprite shader supported");
+            var artwork = Resources.Load<RoomOneArtwork>("RoomOne/CloudRobotArtwork");
+            check(artwork && artwork.IsComplete, "PR #3 artwork, characters and new workshop background available");
+            foreach (string action in RoomOneRules.Actions)
+                for (int i = 0; i < 3; i++)
+                    check(artwork.Frame("robot:" + action + ":box", i).width == 418, "Native action canvas: " + action + " " + i);
+            for (int i = 0; i < 3; i++)
+                check(artwork.Frame("box:lift:robot", i).height == 561, "Full reverse lift canvas: " + i);
             File.WriteAllText("Temp/RoomOne-validation.txt", passed + " checks passed");
             Debug.Log("[RoomOne] " + passed + " checks passed.");
         }
@@ -108,7 +112,7 @@ namespace Hackathon.Editor
             importer.maxTextureSize = 2048;
             importer.mipmapEnabled = false;
             importer.textureCompression = TextureImporterCompression.Uncompressed;
-            importer.filterMode = assetPath.Contains("Background") ? FilterMode.Bilinear : FilterMode.Point;
+            importer.filterMode = assetPath.Contains("Background") || assetPath.Contains("CloudWorkshop") ? FilterMode.Bilinear : FilterMode.Point;
             importer.wrapMode = TextureWrapMode.Clamp;
         }
     }

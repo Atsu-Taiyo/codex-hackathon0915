@@ -55,12 +55,25 @@ namespace Hackathon.Editor
                 yield return new WaitForSeconds(3);
                 Check(map.robo.transform.position.z > -6 && map.robo.transform.position.y > -.2f, "Coast collision prevents leaving island");
                 map.robo.StopWalking();
+                Check(GameObject.Find("World Map Art"), "Refreshed island artwork is in the saved scene");
+                var body = map.robo.GetComponent<CharacterController>();
+                body.enabled = false; map.robo.transform.position = new Vector3(-.2f, .12f, 3.5f); body.enabled = true;
+                map.robo.WalkTo(new Vector3(3, 1.02f, 3.5f));
+                deadline = Time.realtimeSinceStartup + 5;
+                while (map.robo.HasDestination && Time.realtimeSinceStartup < deadline) yield return null;
+                Check(!map.robo.HasDestination && map.robo.transform.position.y > .9f,
+                    "Robot climbs PR stairs to the meadow terrace (position " + map.robo.transform.position + ")");
+                map.robo.StopWalking();
                 map.SelectRoom(2);
                 Check(map.SelectedRoom == 2 && SceneManager.GetActiveScene().path == WorldNavigation.MapScene, "Future room selection does not open gameplay");
                 map.SelectRoom(1); map.EnterRoomOne();
                 yield return null; yield return null;
                 var room = FindAnyObjectByType<RoomOneController>();
                 Check(room && !FindAnyObjectByType<WorldMapController>(), "Map enters Room 1 without duplicate world");
+                deadline = Time.realtimeSinceStartup + 2;
+                while (!room.IsPlaying && Time.realtimeSinceStartup < deadline) yield return null;
+                Check(room.NeedsLanguageSelection && !room.IsPlaying, "Room 1 asks for language before preview");
+                Check(room.SelectLanguage(false), "English selected from Room 1 entrance");
                 Check(room.IsPlaying && !room.ReturnToMap(), "Goal playback blocks scene transition");
                 deadline = Time.realtimeSinceStartup + 5;
                 while (room.IsPlaying && Time.realtimeSinceStartup < deadline) yield return null;

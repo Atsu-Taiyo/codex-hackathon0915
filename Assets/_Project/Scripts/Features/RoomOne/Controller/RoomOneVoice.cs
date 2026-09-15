@@ -75,7 +75,7 @@ namespace Hackathon.RoomOne
         // Apply the entire result atomically; never overwrite edits made while Codex was thinking.
         public bool TryApplyVoiceCards(string[] proposed, string[] expected)
         {
-            if (playing || proposed == null || proposed.Length != 3 || expected == null || expected.Length != 3) return false;
+            if (IsSwahili || NeedsLanguageSelection || playing || proposed == null || proposed.Length != 3 || expected == null || expected.Length != 3) return false;
             for (int i = 0; i < 3; i++)
             {
                 if (Cards[i] != expected[i]) return false;
