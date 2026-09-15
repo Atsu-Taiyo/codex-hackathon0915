@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Hackathon.RoomOne;
 using UnityEditor;
 using UnityEngine;
@@ -47,7 +48,8 @@ namespace Hackathon.Editor
             foreach (string target in new[] { "robot", "box" })
             foreach (string action in RoomOneRules.Actions)
             {
-                check(RoomOneRules.TryInterpret(new[] { subject, action, target }, out var m, out _), "Semantic parse");
+                check(RoomOneRules.TryInterpret(new[] { subject, action, target }, out var m, out _) == (subject != target), "Unique card semantic parse");
+                if (subject == target) continue;
                 check(RoomOneRules.IsGoal(m) == (subject == "robot" && target == "box" && action == "lift"), "Only intended goal clears");
             }
             check(!RoomOneRules.TryInterpret(new[] { "push", "robot", "box" }, out _, out int bad) && bad == 0, "Bad word order highlights first slot");
@@ -86,7 +88,7 @@ namespace Hackathon.Editor
         {
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
-                scenes = new[] { "Assets/_Project/Scenes/Bootstrap.unity" },
+                scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(scene => scene.path).ToArray(),
                 locationPathName = "Builds/RoomOne.app",
                 target = BuildTarget.StandaloneOSX,
                 options = BuildOptions.None

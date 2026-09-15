@@ -13,6 +13,7 @@ namespace Hackathon.RoomOne
             return index >= 0 ? Verbs[index] : action;
         }
         public static bool IsNoun(string word) => word == "robot" || word == "box";
+        public static string DisplayWord(string word) => IsNoun(word) ? "the " + word : DisplayVerb(word);
         public static bool TryInterpret(IList<string> cards, out SentenceMeaning meaning, out int badSlot)
         {
             meaning = null;
@@ -20,7 +21,7 @@ namespace Hackathon.RoomOne
             if (cards == null || cards.Count != 3) { badSlot = 0; return false; }
             if (!IsNoun(cards[0])) { badSlot = 0; return false; }
             if (Array.IndexOf(Actions, cards[1]) < 0) { badSlot = 1; return false; }
-            if (!IsNoun(cards[2])) { badSlot = 2; return false; }
+            if (!IsNoun(cards[2]) || cards[2] == cards[0]) { badSlot = 2; return false; }
             meaning = new SentenceMeaning { subject = cards[0], action = cards[1], target = cards[2] };
             return true;
         }

@@ -6,7 +6,13 @@ Unity **6000.4.9f1** の共同開発用プロジェクト。Unity 標準の Asse
 
 1. Unity Hub で 6000.4.9f1 と Git LFS をインストール。
 2. `git lfs install` の後に clone し、Unity Hub の Add project from disk でリポジトリ直下を選択。
-3. `Assets/_Project/Scenes/Bootstrap.unity` を開いて Play。Room 1 の言語探索パズルが起動します。
+3. `Assets/_Project/Scenes/WorldMap.unity` を開いて Play。3DのMapから **Enter Room 1** で言語探索パズルに入ります。
+
+## World Map
+
+PR #2の地形キットを組み合わせた島をcodex roboで歩けます。WASD／矢印キー、床クリックに対応。工房の近くでE／Enterを押すか、**Enter Room 1** をクリックするとRoom 1へ移動します。Room 1のMapボタン、クリア画面の **Back to map** で戻れます。単語・収集・クリア状況は往復しても保存されます。
+
+Room 2は準備中の表示です。起動シーン・生成元・検証手順は [Mapガイド](docs/WORLD_MAP.md) を参照してください。Room 1だけを確認する場合は従来の `Bootstrap.unity` を直接開けます。
 
 ## Room 1 MVP
 

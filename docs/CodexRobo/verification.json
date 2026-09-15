@@ -1,0 +1,11 @@
+{
+  "unity": "6000.4.9f1",
+  "runtime_checks": 33,
+  "asset_references_resolved": 14,
+  "files": {
+    "Assets/_Project/Content/Features/Map/CodexRobo/CodexRobo_Skinned.asset": "c6a9ab78162a9d393a72f5721e07351030e6be9054c2b20bba158ac814f4b465",
+    "Assets/_Project/Content/Features/Map/CodexRobo/CodexRobo.prefab": "cc696d759f9d9e49f95abcb8f9eaf0587f53de30d56c51a945f6fe454cf93da8",
+    "Assets/_Project/Content/Features/Map/CodexRobo/Idle.anim": "6f6567e3e5f145f3b93849a299c1930eab71f6e6844b9259c7aa423123cfff78",
+    "Assets/_Project/Content/Features/Map/CodexRobo/Walk.anim": "dfb2a4415a0189e8ad452e34f460efdde732740e72a99d289e55ed6cb9e0ecc9"
+  }
+}

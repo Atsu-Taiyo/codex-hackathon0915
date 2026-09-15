@@ -9,7 +9,7 @@ namespace Hackathon.RoomOne
         static readonly Color Ink = Hex("24375C"), Muted = Hex("8291A7"), Blue = Hex("D5EAFE"), Green = Hex("BEEFCB"), White = Hex("FFFFFF");
         readonly Dictionary<string, GUIStyle> textStyles = new Dictionary<string, GUIStyle>();
         Vector2 pointer;
-        readonly Rect[] slots = { new Rect(305, 635, 262, 86), new Rect(583, 635, 262, 86), new Rect(861, 635, 262, 86) };
+        readonly Rect[] slots = { new Rect(510, 604, 180, 70), new Rect(710, 604, 180, 70), new Rect(910, 604, 180, 70) };
         static Color Hex(string value) { ColorUtility.TryParseHtmlString("#" + value, out var c); return c; }
         GUIStyle TextStyle(int size, Color color, TextAnchor align = TextAnchor.MiddleCenter, bool bold = false)
         {
@@ -98,9 +98,9 @@ namespace Hackathon.RoomOne
             var e = Event.current;
             if (e.type == EventType.KeyDown)
             {
-                if (e.keyCode == KeyCode.Escape) { modal = ""; selected = -1; e.Use(); }
+                if (e.keyCode == KeyCode.Escape) { modal = ""; selected = -1; draggedWord = null; dragging = -1; hasDragged = false; e.Use(); }
                 else if (free && e.keyCode == KeyCode.Return) { RunSentence(); e.Use(); }
-                else if (free && selected >= 0 && (e.keyCode == KeyCode.Delete || e.keyCode == KeyCode.Backspace)) { Cards[selected] = null; e.Use(); }
+                else if (free && selected >= 0 && (e.keyCode == KeyCode.Delete || e.keyCode == KeyCode.Backspace)) { RemoveCard(selected); e.Use(); }
                 else if (free && selected >= 0 && (e.keyCode == KeyCode.LeftArrow || e.keyCode == KeyCode.RightArrow))
                 {
                     int next = Mathf.Clamp(selected + (e.keyCode == KeyCode.LeftArrow ? -1 : 1), 0, 2);
@@ -112,12 +112,11 @@ namespace Hackathon.RoomOne
         void DrawHeader()
         {
             DrawVoiceButton();
-            if (Button(new Rect(34, 32, 84, 76), "⌂", White, 42, !playing)) OpenModal("map");
+            if (Button(new Rect(34, 32, 84, 76), "⌂", White, 42, !playing && !voiceBusy)) ReturnToMap();
             Label(new Rect(144, 31, 180, 27), "ENGLISH WORLD", 16, Muted, TextAnchor.MiddleLeft, true);
             Label(new Rect(144, 57, 190, 48), "Room 01", 32, Ink, TextAnchor.MiddleLeft, true);
             Panel(new Rect(374, 24, 850, 197), new Color(1, 1, 1, .95f), 25);
-            Label(new Rect(397, 32, 195, 25), "MAKE THIS HAPPEN", 14, Muted, TextAnchor.MiddleLeft, true);
-            if (Button(new Rect(1046, 31, 155, 28), "Watch goal", Hex("EEF3FC"), 14, !playing)) WatchGoal();
+            if (Button(new Rect(1046, 31, 155, 28), "▶", Hex("EEF3FC"), 14, !playing)) WatchGoal();
             for (int i = 0; i < 3; i++)
             {
                 Rect r = new Rect(418 + i * 257, 67, 229, 115);
@@ -131,7 +130,6 @@ namespace Hackathon.RoomOne
                 bool earned = i == 0 ? Progress.isCleared : i == 1 ? Progress.discoveredWords.Count == 2 : Progress.discoveredCollections.Count == 6;
                 Label(new Rect(1311 + i * 78, 37, 66, 57), "★", 45, earned ? Hex("FFBA2E") : Hex("DDE4EC"));
             }
-            Label(new Rect(1300, 91, 256, 21), "GOAL        WORDS        SCENES", 11, Muted, TextAnchor.MiddleCenter, true);
         }
         void DrawWorld()
         {
@@ -143,23 +141,24 @@ namespace Hackathon.RoomOne
             if (playing)
             {
                 Panel(new Rect(617, 549, 366, 25), White, 12, false);
-                Label(new Rect(617, 549, 366, 25), goalPreview ? "WATCH THE GOAL   ·   " + (frame + 1) + " / 3" : "EXPERIMENT   ·   " + (frame + 1) + " / 3", 13, Muted, TextAnchor.MiddleCenter, true);
+                for (int i = 0; i < 3; i++) Panel(new Rect(769 + i * 26, 557, 10, 10), frame == i ? Hex("5089F5") : Hex("D6DEEA"), 5, false);
             }
             else
             {
                 var robotHit = new Rect(548, 281, 230, 251);
                 var boxHit = new Rect(850, 367, 223, 179);
+                if (!Progress.discoveredWords.Contains("robot")) Label(new Rect(630, 255, 46, 38), "+", 28 + (int)(3 * Mathf.Sin(Time.unscaledTime * 3)), Muted);
+                if (!Progress.discoveredWords.Contains("box")) Label(new Rect(934, 325, 46, 38), "+", 28 + (int)(3 * Mathf.Sin(Time.unscaledTime * 3)), Muted);
                 if (Hit(robotHit)) Discover("robot");
                 if (Hit(boxHit)) Discover("box");
-                if (robotHit.Contains(pointer)) Label(new Rect(576, 246, 190, 36), Progress.discoveredWords.Contains("robot") ? "robot" : "?", 25, Ink, TextAnchor.MiddleCenter, true);
-                if (boxHit.Contains(pointer)) Label(new Rect(844, 316, 210, 36), Progress.discoveredWords.Contains("box") ? "box" : "?", 25, Ink, TextAnchor.MiddleCenter, true);
+                if (robotHit.Contains(pointer)) Label(new Rect(576, 246, 190, 36), Progress.discoveredWords.Contains("robot") ? RoomOneRules.DisplayWord("robot") : "?", 25, Ink, TextAnchor.MiddleCenter, true);
+                if (boxHit.Contains(pointer)) Label(new Rect(844, 316, 210, 36), Progress.discoveredWords.Contains("box") ? RoomOneRules.DisplayWord("box") : "?", 25, Ink, TextAnchor.MiddleCenter, true);
             }
             if (Time.unscaledTime < spotlightUntil)
             {
                 Rect spot = new Rect(spotlight == "robot" ? 557 : 853, 278, 210, 46);
-                Panel(spot, Blue, 20); Label(spot, "+ " + spotlight, 23, Ink, TextAnchor.MiddleCenter, true);
+                Panel(spot, Blue, 20); Label(spot, "+ " + RoomOneRules.DisplayWord(spotlight), 23, Ink, TextAnchor.MiddleCenter, true);
             }
-            if (!playing) Label(new Rect(390, 546, 820, 28), Time.unscaledTime < noticeUntil ? notice : "Look closely. Touch an object. Discover its word.", 18, Ink);
         }
         void DrawUnusual(Rect stage)
         {
@@ -178,82 +177,81 @@ namespace Hackathon.RoomOne
             Entity(actor, activeMeaning.subject); Entity(target, activeMeaning.target);
             Label(new Rect(stage.x + 275, stage.y + 130, 90, 60), activeMeaning.action == "lift" ? "↑" : "→", 42, Hex("E0A146"));
             Label(new Rect(stage.x + 55, stage.y + 25, stage.width - 110, 42), activeMeaning.Display, 23, Ink);
-            Label(new Rect(stage.x, stage.yMax - 45, stage.width, 30), "A curious experiment!", 17, Muted);
+        }
+        void WordCard(Rect r, string word, bool empty = false)
+        {
+            Panel(r, empty ? Hex("EEF2F7") : Blue, 16, !empty);
+            Label(r, empty ? "·" : RoomOneRules.DisplayWord(word), 23, empty ? Muted : Ink, TextAnchor.MiddleCenter, true);
+            if (!empty) Label(new Rect(r.x + 7, r.y + 22, 15, 26), "⋮", 20, Muted);
         }
         void DrawBuilder()
         {
             Panel(new Rect(32, 588, 1536, 253), new Color(1, 1, 1, .97f), 27);
             DrawVoiceControls();
-            Label(new Rect(61, 603, 220, 24), "BUILD YOUR SENTENCE", 14, Muted, TextAnchor.MiddleLeft, true);
-            Label(new Rect(1114, 603, 408, 24), "Drag to reorder  ·  Click a slot to replace", 14, Muted, TextAnchor.MiddleRight);
-            Label(new Rect(68, 650, 201, 34), "Your words", 22, Ink, TextAnchor.MiddleLeft, true);
-            int n = 0;
-            foreach (string noun in new[] { "robot", "box" })
-            {
-                bool known = Progress.discoveredWords.Contains(noun);
-                if (Button(new Rect(64, 702 + n * 53, 189, 43), known ? noun : "? ? ?", Blue, 20, known && !playing)) Choose(noun);
-                n++;
-            }
+            var e = Event.current;
+            Rect tray = new Rect(48, 690, 1504, 80);
             for (int i = 0; i < 3; i++)
             {
-                string card = Cards[i];
-                bool noun = RoomOneRules.IsNoun(card);
-                Color color = string.IsNullOrEmpty(card) ? Hex("F0F3F7") : noun ? Blue : Green;
-                if (selected == i) Panel(new Rect(slots[i].x - 3, slots[i].y - 3, slots[i].width + 6, slots[i].height + 6), Hex("71A5EA"), 18, false);
-                if (badSlot == i) color = Hex("FFE0CE");
-                Panel(slots[i], color, 16);
-                string value = string.IsNullOrEmpty(card) ? "+" : noun ? (i == 0 ? "The " : "the ") + card : RoomOneRules.DisplayVerb(card);
-                Label(slots[i], value, string.IsNullOrEmpty(card) ? 30 : 28, string.IsNullOrEmpty(card) ? Muted : Ink, TextAnchor.MiddleCenter, true);
-                Label(new Rect(slots[i].x, 724, slots[i].width, 20), badSlot == i ? "Try a different card here" : "", 12, Hex("BA7548"));
-                var e = Event.current;
-                if (!playing && modal == "" && e.type == EventType.MouseDown && slots[i].Contains(pointer))
+                Rect r = slots[i];
+                if (selected == i || (draggedWord != null && r.Contains(pointer))) Panel(new Rect(r.x-3,r.y-3,r.width+6,r.height+6), Hex("71A5EA"), 18, false);
+                if (badSlot == i) Panel(new Rect(r.x-4,r.y-4,r.width+8,r.height+8), Hex("F5A76C"), 18, false);
+                WordCard(r, Cards[i], string.IsNullOrEmpty(Cards[i]) || (hasDragged && dragging == i));
+                if (!playing && GUI.enabled && e.type == EventType.MouseDown && e.button == 0 && r.Contains(pointer))
                 {
-                    selected = i; dragging = i; dragStart = pointer; hasDragged = false;
-                    if (e.clickCount == 2) Cards[i] = null;
+                    selected = i; dragging = i; draggedWord = Cards[i]; dragStart = pointer; hasDragged = false;
+                    if (e.clickCount == 2) { RemoveCard(i); draggedWord = null; }
                     e.Use();
                 }
             }
-            if (dragging >= 0 && Event.current.type == EventType.MouseDrag)
-            {
-                hasDragged |= Vector2.Distance(dragStart, pointer) > 8; Event.current.Use();
-            }
-            if (dragging >= 0 && Event.current.type == EventType.MouseUp)
-            {
-                if (hasDragged) for (int i = 0; i < 3; i++) if (slots[i].Contains(pointer))
-                { SwapCards(dragging, i); break; }
-                dragging = -1; Event.current.Use();
-            }
-            if (Button(new Rect(1160, 635, 235, 86), playing ? "Playing…" : "▶  RUN", Hex("54D77B"), 28, !playing)) RunSentence();
-            if (Button(new Rect(1410, 635, 118, 86), "Reset", Hex("F0F3F7"), 18, !playing))
-            { Array.Clear(Cards, 0, Cards.Length); selected = badSlot = -1; row = frame = 0; activeMeaning = null; }
+            string[] words = { "robot", "box", "push", "pull", "lift", "open", "shake", "break" };
             int hoverRow = -1;
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < words.Length; i++)
             {
-                var r = new Rect(305 + i * 204, 755, 189, 59);
-                if (Button(r, RoomOneRules.Verbs[i], Cards[1] == RoomOneRules.Actions[i] ? Green : Hex("F8FAFD"), 23, !playing)) Choose(RoomOneRules.Actions[i]);
-                if (modal == "" && !playing && r.Contains(pointer)) hoverRow = i;
+                string word = words[i];
+                Rect r = new Rect(59 + i * 188, 696, 180, 70);
+                bool known = Progress.globalVocabulary.Contains(word), used = Array.IndexOf(Cards, word) >= 0;
+                WordCard(r, word, !known || used || (hasDragged && dragging == -1 && draggedWord == word));
+                if (!known) Label(r, "?", 26, Muted);
+                if (known && !used && !playing && GUI.enabled && e.type == EventType.MouseDown && e.button == 0 && r.Contains(pointer))
+                { draggedWord = word; dragging = -1; dragStart = pointer; hasDragged = false; e.Use(); }
+                if (i >= 2 && known && !used && !playing && modal == "" && r.Contains(pointer) && draggedWord == null) hoverRow = i - 2;
             }
+            if (draggedWord != null && e.type == EventType.MouseDrag)
+            { hasDragged |= Vector2.Distance(dragStart, pointer) > 8; e.Use(); }
+            if (draggedWord != null && e.type == EventType.MouseUp && e.button == 0)
+            {
+                if (hasDragged)
+                {
+                    int destination = Array.FindIndex(slots, r => r.Contains(pointer));
+                    if (destination >= 0) PlaceCard(draggedWord, destination);
+                    else if (tray.Contains(pointer) && dragging >= 0) RemoveCard(dragging);
+                }
+                else if (dragging < 0) Choose(draggedWord);
+                draggedWord = null; dragging = -1; hasDragged = false; e.Use();
+            }
+            // Playback controls are a separate row inside the same widget.
+            if (Button(new Rect(690, 785, 220, 43), playing ? "•••" : "▶", Hex("54D77B"), 27, !playing)) RunSentence();
+            if (Button(new Rect(931, 785, 70, 43), "↺", Hex("EEF2F7"), 28, !playing)) ResetCards();
             if (hoverRow >= 0)
             {
-                Rect hint = new Rect(Mathf.Clamp(305 + hoverRow * 204, 310, 1200), 433, 300, 176);
+                Rect hint = new Rect(Mathf.Clamp(59 + (hoverRow + 2) * 188, 310, 1200), 414, 300, 170);
                 Panel(hint, White, 18); Frame(new Rect(hint.x + 12, hint.y + 12, 276, 138), hoverRow, (int)(Time.unscaledTime * 2) % 3);
-                Label(new Rect(hint.x, hint.yMax - 26, hint.width, 22), RoomOneRules.Verbs[hoverRow], 16, Ink, TextAnchor.MiddleCenter, true);
             }
-            if (dragging >= 0 && hasDragged && !string.IsNullOrEmpty(Cards[dragging]))
-            {
-                var r = new Rect(pointer.x - 90, pointer.y - 32, 180, 64);
-                Panel(r, Blue, 16); Label(r, RoomOneRules.DisplayVerb(Cards[dragging]), 21, Ink);
-            }
+            if (draggedWord != null && hasDragged) WordCard(new Rect(pointer.x-90,pointer.y-35,180,70), draggedWord);
         }
         void DrawFooter()
         {
             if (Button(new Rect(34, 852, 155, 37), "Collection", White, 17, !playing)) OpenModal("collection");
             Label(new Rect(226, 851, 530, 38), "WORDS  " + (Progress.discoveredWords.Count + 6) + " / 8      SCENES  " + Progress.discoveredCollections.Count + " / 6", 15, Ink, TextAnchor.MiddleLeft, true);
-            Label(new Rect(756, 851, 520, 38), Progress.isCleared ? "ROOM CLEAR  ·  Keep experimenting" : "Every experiment teaches you something.", 15, Ink, TextAnchor.MiddleRight);
-            if (Button(new Rect(1362, 852, 204, 37), "Map  /  Room 01", White, 17, !playing)) OpenModal("map");
+            if (Button(new Rect(1362, 852, 204, 37), "Map  /  Room 01", White, 17, !playing && !voiceBusy)) ReturnToMap();
         }
         void DrawModal()
         {
+            if (modal == "collection" || modal == "history")
+            {
+                DrawCollection();
+                return;
+            }
             GUI.DrawTexture(new Rect(0, 0, 1600, 900), Texture2D.whiteTexture, ScaleMode.StretchToFill, true, 0, new Color(.08f, .13f, .23f, .55f), 0, 0);
             Panel(new Rect(320, 142, 960, 616), White, 30);
             if (Button(new Rect(1200, 160, 53, 44), "×", Hex("F0F3F7"), 27)) modal = "";
@@ -261,60 +259,19 @@ namespace Hackathon.RoomOne
             {
                 Label(new Rect(500, 177, 600, 67), "★  ROOM CLEAR  ★", 43, Hex("D99A1D"), TextAnchor.MiddleCenter, true);
                 Frame(new Rect(576, 264, 448, 224), 2, 2);
-                Label(new Rect(475, 508, 650, 50), "You discovered what happens!", 27, Ink, TextAnchor.MiddleCenter, true);
-                if (Button(new Rect(491, 586, 298, 64), "Keep exploring", Green, 24)) modal = "";
-                if (Button(new Rect(809, 586, 298, 64), "Back to map", Blue, 24)) modal = "map";
+                if (Button(new Rect(491, 586, 298, 64), "▶", Green, 24)) modal = "";
+                if (Button(new Rect(809, 586, 298, 64), "Back to map", Blue, 24, !voiceBusy)) ReturnToMap();
                 Label(new Rect(500, 682, 600, 30), "Room 02  ·  Coming later", 18, Muted);
             }
             else if (modal == "map")
             {
                 Label(new Rect(440, 181, 720, 57), "ENGLISH WORLD", 37, Ink, TextAnchor.MiddleCenter, true);
-                Label(new Rect(470, 247, 660, 33), "Small discoveries. A whole new language.", 20, Muted);
                 Panel(new Rect(416, 326, 386, 290), Hex("EDF5FF"), 25);
                 Label(new Rect(446, 349, 325, 48), "Room 01  ·  The workshop", 25, Ink, TextAnchor.MiddleCenter, true);
                 Label(new Rect(446, 414, 325, 84), (Progress.isCleared ? "CLEAR" : "EXPLORE") + "\nWords " + (Progress.discoveredWords.Count + 6) + "/8  ·  Scenes " + Progress.discoveredCollections.Count + "/6", 22, Ink);
-                if (Button(new Rect(455, 535, 308, 58), "Enter room", Green)) { modal = ""; row = frame = 0; activeMeaning = null; }
+                if (Button(new Rect(455, 535, 308, 58), "▶", Green)) { modal = ""; row = frame = 0; activeMeaning = null; }
                 Panel(new Rect(842, 326, 334, 290), Hex("F3F4F6"), 25);
                 Label(new Rect(882, 387, 254, 120), "Room 02\nLOCKED\nComing later", 25, Muted);
-            }
-            else if (modal == "collection")
-            {
-                Label(new Rect(405, 165, 780, 57), "Your discoveries", 37, Ink, TextAnchor.MiddleLeft, true);
-                if (Button(new Rect(407, 237, 215, 45), "Collection", Blue, 19)) scroll = Vector2.zero;
-                if (Button(new Rect(635, 237, 247, 45), "My experiments", Hex("EDF3FA"), 19)) { modal = "history"; scroll = Vector2.zero; }
-                Label(new Rect(916, 240, 290, 40), Progress.discoveredCollections.Count + " / 6 scenes", 20, Muted);
-                for (int i = 0; i < 6; i++)
-                {
-                    int col = i % 3, line = i / 3;
-                    var r = new Rect(407 + col * 267, 310 + line * 201, 251, 184);
-                    string key = "robot:" + RoomOneRules.Actions[i] + ":box";
-                    bool known = Progress.discoveredCollections.Contains(key);
-                    Panel(r, Hex("F6F7FA"), 18);
-                    if (known) Frame(new Rect(r.x + 9, r.y + 8, 233, 117), i, 2);
-                    else Label(new Rect(r.x, r.y + 22, r.width, 90), "?", 48, Muted);
-                    if (Button(new Rect(r.x + 9, r.y + 137, 233, 36), known ? RoomOneRules.Verbs[i] + "  ›" : "Undiscovered", known ? Green : Hex("E8ECF2"), 18, known))
-                        Replay(new SentenceMeaning { subject = "robot", action = RoomOneRules.Actions[i], target = "box" });
-                }
-            }
-            else if (modal == "history")
-            {
-                Label(new Rect(405, 165, 780, 57), "My experiments", 37, Ink, TextAnchor.MiddleLeft, true);
-                if (Button(new Rect(407, 237, 240, 45), "‹  Collection", Blue, 19)) { modal = "collection"; scroll = Vector2.zero; }
-                Label(new Rect(734, 237, 470, 45), Progress.executionHistory.Count + " experiments  ·  click to replay", 19, Muted, TextAnchor.MiddleRight);
-                scroll = GUI.BeginScrollView(new Rect(405, 308, 812, 408), scroll, new Rect(0, 0, 785, Mathf.Max(408, Progress.executionHistory.Count * 67)));
-                Vector2 viewportPointer = pointer;
-                pointer = new Vector2(pointer.x - 405 + scroll.x, pointer.y - 308 + scroll.y);
-                bool viewportEnabled = GUI.enabled;
-                GUI.enabled = viewportEnabled && new Rect(405, 308, 812, 408).Contains(viewportPointer);
-                if (Progress.executionHistory.Count == 0) Label(new Rect(0, 40, 770, 90), "Your first experiment is waiting.", 26, Muted);
-                for (int i = 0; i < Progress.executionHistory.Count; i++)
-                {
-                    var meaning = Progress.executionHistory[Progress.executionHistory.Count - 1 - i];
-                    if (Button(new Rect(0, i * 67, 778, 55), meaning.Display + "   ›", Hex("F0F5FB"), 22)) Replay(meaning);
-                }
-                GUI.enabled = viewportEnabled;
-                GUI.EndScrollView();
-                pointer = viewportPointer;
             }
         }
     }

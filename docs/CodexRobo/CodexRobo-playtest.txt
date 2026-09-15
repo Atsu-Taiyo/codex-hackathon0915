@@ -1,0 +1,4 @@
+PASS: 33 checks
+Grounded movement, destination stop, independent arm/leg animation, idle blend, normalized diagonals, facing, wall/obstacle collision.
+Baked mesh cycle minY=-0.001388686 maxY=1.017348
+Source vertices=335580

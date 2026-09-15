@@ -63,7 +63,7 @@ namespace Hackathon.RoomOne
             activeMeaning = null;
             spotlight = noun;
             spotlightUntil = Time.unscaledTime + 1.4f;
-            Notify(noun + "  ·  added to your words");
+            Notify(RoomOneRules.DisplayWord(noun) + "  ·  added to your words");
         }
         void Choose(string word)
         {
@@ -74,9 +74,30 @@ namespace Hackathon.RoomOne
                 if (!RoomOneRules.IsNoun(word)) slot = 1;
                 else slot = string.IsNullOrEmpty(Cards[0]) ? 0 : 2;
             }
-            Cards[slot] = word;
+            PlaceCard(word, slot);
             selected = -1;
             badSlot = -1;
+        }
+        public bool PlaceCard(string word, int slot)
+        {
+            if (playing || slot < 0 || slot >= 3 || !Progress.globalVocabulary.Contains(word)) return false;
+            int source = Array.IndexOf(Cards, word);
+            if (source >= 0) SwapCards(source, slot);
+            else Cards[slot] = word;
+            badSlot = -1;
+            return true;
+        }
+        public void RemoveCard(int slot)
+        {
+            if (!playing && slot >= 0 && slot < 3) Cards[slot] = null;
+        }
+        public void ResetCards()
+        {
+            if (playing) return;
+            Array.Clear(Cards, 0, Cards.Length);
+            selected = badSlot = dragging = -1;
+            draggedWord = null;
+            row = frame = 0; activeMeaning = null;
         }
         public bool RunSentence()
         {
@@ -143,6 +164,7 @@ namespace Hackathon.RoomOne
         void OpenModal(string value) { if (!playing) { modal = value; scroll = Vector2.zero; } }
         void OnDestroy()
         {
+            ReleaseCollectionStyle();
             if (chime) Destroy(chime);
             if (pixelCutout) Destroy(pixelCutout);
         }
