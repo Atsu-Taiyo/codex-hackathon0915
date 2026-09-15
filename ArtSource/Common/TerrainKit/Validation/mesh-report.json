@@ -1,0 +1,469 @@
+{
+  "blender_version": "4.5.9 LTS",
+  "asset_count": 18,
+  "assets": [
+    {
+      "name": "Terrain_GrassTile_2x2",
+      "vertices": 128,
+      "triangles": 252,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        0.5
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        0.5,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 1.9972141076617616,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_GrassFloor_4x4",
+      "vertices": 128,
+      "triangles": 252,
+      "blender_dimensions_xyz_m": [
+        4.0,
+        4.0,
+        0.5
+      ],
+      "unity_dimensions_xyz_m": [
+        4.0,
+        0.5,
+        4.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 7.994714041715082,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_GrassCliff_2x2",
+      "vertices": 128,
+      "triangles": 252,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 7.996276593755994,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_GrassOuterCorner_2x2",
+      "vertices": 186,
+      "triangles": 368,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        0.5
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        0.5,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 1.957834560697256,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_GrassInnerCorner_2x2",
+      "vertices": 192,
+      "triangles": 380,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        0.5
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        0.5,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 1.4971930178513149,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_GrassRamp_2x4_Rise1",
+      "vertices": 128,
+      "triangles": 252,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        4.0,
+        1.493936538696289
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        1.493936538696289,
+        4.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 7.99563058413561,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_GrassSteps_2x2_Rise1",
+      "vertices": 240,
+      "triangles": 476,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        1.5
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        1.5,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 4.4982465961808495,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        0,
+        4
+      ]
+    },
+    {
+      "name": "Terrain_SandTile_2x2",
+      "vertices": 128,
+      "triangles": 252,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        0.5
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        0.5,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 1.9972141076617616,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_SandRamp_2x4_Rise1",
+      "vertices": 128,
+      "triangles": 252,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        4.0,
+        1.493936538696289
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        1.493936538696289,
+        4.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 7.99563058413561,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_ShoreSlope_2x2_Drop05",
+      "vertices": 128,
+      "triangles": 252,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        0.7939366102218628
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        0.7939366102218628,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 2.1971908827946267,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_GrassRound_4m",
+      "vertices": 280,
+      "triangles": 556,
+      "blender_dimensions_xyz_m": [
+        4.0,
+        4.0,
+        1.0
+      ],
+      "unity_dimensions_xyz_m": [
+        4.0,
+        1.0,
+        4.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 12.768083017156448,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_SandCliff_2x2",
+      "vertices": 128,
+      "triangles": 252,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 7.996276593755994,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "name": "Terrain_WorkshopFloor_2x2",
+      "vertices": 1024,
+      "triangles": 2016,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        0.30000001192092896
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        0.30000001192092896,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 1.1992685832170995,
+      "pivot": "surface zero; incline uses low end, shore uses high end",
+      "collider": true,
+      "materials": [
+        13,
+        14
+      ]
+    },
+    {
+      "name": "Terrain_WorkshopWall_2m",
+      "vertices": 112,
+      "triangles": 220,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        0.20000000298023224,
+        2.5
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        2.5,
+        0.20000000298023224
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 0.9997000860807868,
+      "pivot": "base at zero",
+      "collider": true,
+      "materials": [
+        12,
+        13
+      ]
+    },
+    {
+      "name": "Terrain_WorkshopCorner_2m",
+      "vertices": 168,
+      "triangles": 332,
+      "blender_dimensions_xyz_m": [
+        2.0,
+        2.0,
+        2.5
+      ],
+      "unity_dimensions_xyz_m": [
+        2.0,
+        2.5,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 1.8995821802643578,
+      "pivot": "base at zero",
+      "collider": true,
+      "materials": [
+        12,
+        13
+      ]
+    },
+    {
+      "name": "Backdrop_AmberMesas",
+      "vertices": 560,
+      "triangles": 1112,
+      "blender_dimensions_xyz_m": [
+        4.950000286102295,
+        2.8000001907348633,
+        3.4000000953674316
+      ],
+      "unity_dimensions_xyz_m": [
+        4.950000286102295,
+        3.4000000953674316,
+        2.8000001907348633
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 34.72476579892102,
+      "pivot": "base at zero",
+      "collider": false,
+      "materials": [
+        2,
+        3
+      ]
+    },
+    {
+      "name": "Backdrop_IceTerraces",
+      "vertices": 840,
+      "triangles": 1668,
+      "blender_dimensions_xyz_m": [
+        4.0,
+        3.0,
+        3.5
+      ],
+      "unity_dimensions_xyz_m": [
+        4.0,
+        3.5,
+        3.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 37.225183091305155,
+      "pivot": "base at zero",
+      "collider": false,
+      "materials": [
+        3,
+        6
+      ]
+    },
+    {
+      "name": "Backdrop_CanyonArch",
+      "vertices": 896,
+      "triangles": 1780,
+      "blender_dimensions_xyz_m": [
+        4.899999618530273,
+        2.0,
+        3.5924999713897705
+      ],
+      "unity_dimensions_xyz_m": [
+        4.899999618530273,
+        3.5924999713897705,
+        2.0
+      ],
+      "non_manifold_edges": 0,
+      "zero_area_faces": 0,
+      "signed_volume": 20.43139577381873,
+      "pivot": "base at zero",
+      "collider": false,
+      "materials": [
+        2,
+        3,
+        9
+      ]
+    }
+  ],
+  "unity_editor_test": "NOT RUN: Unity Editor unavailable"
+}
