@@ -39,6 +39,10 @@ namespace Hackathon.Editor
                 while (room.IsPlaying) yield return null;
                 room.Progress.isCleared = false;
                 room.Progress.discoveredWords.Clear(); room.Progress.discoveredCollections.Clear(); room.Progress.executionHistory.Clear();
+                room.Progress.globalVocabulary.Remove("robot"); room.Progress.globalVocabulary.Remove("box");
+                room.Progress.globalVocabulary.Add("robot"); room.Progress.globalVocabulary.Add("box");
+                room.ResetCards();
+                Check(!room.PlaceCard("robot", 0) && !room.PlaceCard("box", 2), "Noun cards stay locked before world clicks");
                 room.Discover("robot"); room.Discover("box"); room.Discover("robot");
                 Check(room.Progress.discoveredWords.Count == 2, "Discovery deduplicated");
                 Check(RoomOneSave.Load().discoveredWords.Count == 2, "Discovery saved");

@@ -13,7 +13,7 @@ Open `Assets/_Project/Scenes/Bootstrap.unity` in Unity 6000.4.9f1 and press Play
 
 ## Rules and scope
 
-- English, one room, two discoverable nouns, six initially available verbs.
+- English, one room, two discoverable nouns, six initially available verbs. The `the robot` and `the box` cards stay locked in the card stock until the matching robot or box is clicked in the workshop; the click unlocks the card for the sentence builder.
 - Noun cards include the article automatically; no Japanese translation is shown.
 - Grammar is noun + verb + noun. The interpreter produces a `SentenceMeaning`, separately from rendering.
 - The 12 combinations with distinct subject/object cards are accepted; repeated use of the same card is rejected. The six robot-to-box actions and **The box lifts the robot.** use dedicated generated three-frame artwork. The reverse lift gives the box orange arms and legs; its hands raise and support the robot while its feet stay on the ground. Other reverse combinations use a generic three-step actor/action/target illustration.

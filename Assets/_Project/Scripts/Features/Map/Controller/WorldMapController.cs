@@ -101,7 +101,7 @@ namespace Hackathon.Map
                 Text(new Rect(1050, 648, 170, 30), "Coming soon", 17, Muted, true);
             }
             Panel(MoveHintRect, Paper, 12);
-            Text(new Rect(39, 651, 245, 28), "WASD / ↑↓←→  ·  Click", 14, Ink);
+            Text(new Rect(39, 651, 245, 28), "WASD / Arrow keys / Click", 14, Ink);
             GUI.matrix = previous;
         }
 

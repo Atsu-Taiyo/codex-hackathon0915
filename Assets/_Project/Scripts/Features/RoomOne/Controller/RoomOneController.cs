@@ -12,6 +12,24 @@ namespace Hackathon.RoomOne
         string DisplaySentence(SentenceMeaning meaning) => IsSwahili
             ? "Roboti " + RoomOneRules.SwahiliWord(meaning.action) + " sanduku."
             : meaning.Display;
+        // Nouns enter the card stock only through Discover(), which is called by
+        // clicking the matching character in the workshop. Keep this separate
+        // from globalVocabulary so stale/legacy saves cannot unlock nouns early.
+        bool IsWordAvailable(string word)
+        {
+            if (Progress == null) return false;
+            return RoomOneRules.IsNoun(word)
+                ? Progress.discoveredWords.Contains(word)
+                : Progress.globalVocabulary.Contains(word);
+        }
+        string[] AvailableVocabulary()
+        {
+            if (Progress == null || Progress.globalVocabulary == null) return Array.Empty<string>();
+            var available = new System.Collections.Generic.List<string>();
+            foreach (string word in Progress.globalVocabulary)
+                if (IsWordAvailable(word) && !available.Contains(word)) available.Add(word);
+            return available.ToArray();
+        }
         public bool SelectLanguage(bool swahili)
         {
             if (playing || voiceBusy) return false;
@@ -97,7 +115,7 @@ namespace Hackathon.RoomOne
         }
         public bool PlaceCard(string word, int slot)
         {
-            if (NeedsLanguageSelection || (IsSwahili && (slot != 1 || RoomOneRules.IsNoun(word))) || playing || slot < 0 || slot >= 3 || !Progress.globalVocabulary.Contains(word)) return false;
+            if (NeedsLanguageSelection || (IsSwahili && (slot != 1 || RoomOneRules.IsNoun(word))) || playing || slot < 0 || slot >= 3 || !IsWordAvailable(word)) return false;
             int source = Array.IndexOf(Cards, word);
             if (source >= 0) SwapCards(source, slot);
             else Cards[slot] = word;

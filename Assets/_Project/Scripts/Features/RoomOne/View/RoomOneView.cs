@@ -16,13 +16,17 @@ namespace Hackathon.RoomOne
             string key = size + ":" + color + ":" + align + ":" + bold;
             if (!textStyles.TryGetValue(key, out var style))
             {
-                style = new GUIStyle(GUI.skin.label) { fontSize = size, alignment = align, fontStyle = bold ? FontStyle.Bold : FontStyle.Normal, wordWrap = true };
+                style = new GUIStyle(GUI.skin.label) { font = Resources.Load<Font>("Fonts/NotoSansCJKjp-Regular"), fontSize = size, alignment = align, fontStyle = bold ? FontStyle.Bold : FontStyle.Normal, wordWrap = true };
                 style.normal.textColor = color;
                 textStyles[key] = style;
             }
             return style;
         }
-        void Label(Rect r, string value, int size, Color color, TextAnchor align = TextAnchor.MiddleCenter, bool bold = false) => GUI.Label(r, value, TextStyle(size, color, align, bold));
+        void Label(Rect r, string value, int size, Color color, TextAnchor align = TextAnchor.MiddleCenter, bool bold = false)
+        {
+            if (RoomOneIcons.Draw(r, value, size, color)) return;
+            GUI.Label(r, value, TextStyle(size, color, align, bold));
+        }
         void Panel(Rect r, Color color, int radius = 20, bool shadow = true)
         {
             if (shadow)
@@ -197,7 +201,7 @@ namespace Hackathon.RoomOne
             {
                 string word = words[i];
                 Rect r = new Rect((IsSwahili ? 247 : 59) + i * 188, 696, 180, 70);
-                bool known = Progress.globalVocabulary.Contains(word), used = Array.IndexOf(Cards, word) >= 0;
+                bool known = IsWordAvailable(word), used = Array.IndexOf(Cards, word) >= 0;
                 WordCard(r, word, !known || used || (hasDragged && dragging == -1 && draggedWord == word));
                 if (!known) Label(r, "?", 26, Muted);
                 if (known && !used && !playing && GUI.enabled && e.type == EventType.MouseDown && e.button == 0 && r.Contains(pointer))
@@ -256,7 +260,9 @@ namespace Hackathon.RoomOne
             if (Button(new Rect(1200, 160, 53, 44), "×", Hex("F0F3F7"), 27)) modal = "";
             if (modal == "clear")
             {
-                Label(new Rect(500, 177, 600, 67), "★  ROOM CLEAR  ★", 43, Hex("D99A1D"), TextAnchor.MiddleCenter, true);
+                Label(new Rect(500, 177, 600, 67), "ROOM CLEAR", 43, Hex("D99A1D"), TextAnchor.MiddleCenter, true);
+                Label(new Rect(500, 177, 60, 67), "★", 43, Hex("D99A1D"));
+                Label(new Rect(1040, 177, 60, 67), "★", 43, Hex("D99A1D"));
                 Frame(new Rect(576, 264, 448, 224), 2, 2);
                 if (Button(new Rect(491, 586, 298, 64), "▶", Green, 24)) modal = "";
                 if (Button(new Rect(809, 586, 298, 64), "Back to map", Blue, 24, !voiceBusy)) ReturnToMap();

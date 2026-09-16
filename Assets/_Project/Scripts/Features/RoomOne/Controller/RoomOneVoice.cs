@@ -42,7 +42,7 @@ namespace Hackathon.RoomOne
             var snapshot = (string[])Cards.Clone();
             voiceBusy = true;
             voiceStatus = "Listening / arranging… Speak, then pause.";
-            var data = new VoiceRequest { cards = snapshot, vocabulary = Progress.globalVocabulary.ToArray() };
+            var data = new VoiceRequest { cards = snapshot, vocabulary = AvailableVocabulary() };
             using (var request = new UnityWebRequest("http://127.0.0.1:47831/listen", "POST"))
             {
                 voiceRequest = request;
@@ -79,7 +79,7 @@ namespace Hackathon.RoomOne
             for (int i = 0; i < 3; i++)
             {
                 if (Cards[i] != expected[i]) return false;
-                if (!string.IsNullOrEmpty(proposed[i]) && !Progress.globalVocabulary.Contains(proposed[i])) return false;
+                if (!string.IsNullOrEmpty(proposed[i]) && !IsWordAvailable(proposed[i])) return false;
                 for (int j = 0; j < i; j++)
                     if (!string.IsNullOrEmpty(proposed[i]) && proposed[i] == proposed[j]) return false;
             }
